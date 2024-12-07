@@ -1,0 +1,77 @@
+.dragon{
+    background-color: #4a1bc0 !important;
+}
+.ghost{
+    background-color: #523f6d !important;
+}
+.flying{
+    background-color: #a78eee !important;
+}
+.normal{
+    background-color: #a6a677 !important;
+}
+.water{
+    background-color: #688ef0 !important;
+}
+.psychic{
+    background-color: #f75887 !important;
+}
+.ground{
+    background-color: #e2be66 !important;
+}
+.dark{
+    background-color: #6d5841 !important;
+}
+.poison{
+    background-color: #9b439e !important;
+}
+.fighting{
+    background-color: #bd302c !important;
+}
+.bug{
+    background-color: #a9b820 !important;
+}
+.grass{
+    background-color: #73cc4e !important;
+}
+.steel{
+    background-color: #b7b8d0 !important;
+}
+.fire{
+    background-color: #ef7f2c !important;
+}
+.fairy{
+    background-color: #e5a1e0 !important;
+}
+.ice{
+    background-color: #96d8d3 !important;
+}
+.rock{
+    background-color: #b89f38 !important;
+}
+.electric{
+    background-color: #fbcf28 !important;
+}
+
+
+.hp{
+    background-color: #05c55f !important
+}
+.attack{
+    background-color: #c94e53 !important;
+}
+.defense{
+    background-color: #d59f27 !important;
+}
+.spe-attack{
+    background-color: #bf44f2 !important;
+}
+.spe-defense{
+    background-color: #e7673d !important;
+}
+.speed{
+    background-color: #58abd9 !important;
+}
+.total{
+    background-color: rgb(190, 28, 196) !important;
+}

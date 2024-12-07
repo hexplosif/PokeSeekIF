@@ -1,0 +1,276 @@
+.left-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    width: 70%;
+    height: 100%;
+    margin: 1rem;
+}
+
+.left-container .main-info {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.left-container .main-info .number {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.left-container .main-info .name {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.left-container .description {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.left-container .caracteristics {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.left-container .caracteristics .caracteristic {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 1rem;
+}
+
+.left-container .caracteristics .caracteristic .label {
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100px;
+    text-align: right;
+}
+
+.left-container .caracteristics .caracteristic .abilitie {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.left-container .caracteristics .caracteristic-bar {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+    height: 1rem;
+    border-radius: 1rem;
+    gap: 1rem;
+}
+
+.left-container .caracteristics .caracteristic-bar .label {
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100px;
+    text-align: right;
+}
+
+.left-container .caracteristics .caracteristic-bar .progress {
+    width: 100%;
+}
+
+.left-container .statistics {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.left-container .statistics .stat-bar {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+    height: 1rem;
+    border-radius: 1rem;
+    gap: 1rem;
+}
+
+.left-container .statistics .stat-bar .label {
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100px;
+    text-align: right;
+}
+
+.left-container .statistics .stat-bar .progress {
+    width: 100%;
+}
+
+.right-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    height: 100%;
+    margin: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.right-container .pokemon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.right-container .pokemon-container .pokemon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.right-container .types {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.right-container .types .one-type {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.right-container .types .two-types {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+}
+
+.right-container .generation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.right-container .generation .name {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.right-container .evolutions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+}
+
+.right-container .evolutions .actual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.right-container .evolutions .actual .actual-pokemon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.right-container .evolutions .actual .name {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.right-container .evolutions .evolution {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.right-container .evolutions .evolution .evolution-pokemon {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+}
+
+.right-container .evolutions .evolution .name {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.movies {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+.movies .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.movies .movies-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+    margin-top: 1rem;
+}
+
+.movies .movies-container .movie {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+.movies .movies-container .movie .movie-pokemon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.movies .movies-container .movie .name {
+    font-size: 1rem;
+    font-weight: 700;
+}
