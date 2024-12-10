@@ -52,9 +52,9 @@ async function renderMovie(movie) {
 
     const releaseDate = document.querySelector('.releaseDate');
     const old_date = new Date(movie.releaseDate);
-    const month   = old_date.getUTCMonth() + 1; // months from 1-12
-    const day     = old_date.getUTCDate();
-    const year    = old_date.getUTCFullYear();
+    const month = old_date.getUTCMonth() + 1; // months from 1-12
+    const day = old_date.getUTCDate();
+    const year = old_date.getUTCFullYear();
     const newDate = year + "/" + month + "/" + day;
     movie.releaseDate = newDate;
     releaseDate.textContent = movie.releaseDate;
@@ -69,18 +69,23 @@ async function renderMovie(movie) {
     producer.textContent = movie.producer;
 
     const sequel = document.querySelector('.sequelLabel');
-    
-    const sequel_link = document.createElement('a');
 
-    var text_id = new String(movie.sequel.substring(31))
-    sequel_link.href = `movie.html?id=${text_id}`;
-    sequel_link.innerHTML = ` 
-      <div>
-          <div class="name">${movie.sequelLabel}</div>
-      </div>`;
+    if (movie.sequel == 'N/A') {
+        sequel.textContent = movie.sequel;
 
-    // Add sequel link to the container
-    sequel.appendChild(sequel_link);
+    }
+    else {
+        const sequel_link = document.createElement('a');
+        var text_id = new String(movie.sequel.substring(31))
+        sequel_link.href = `movie.html?id=${text_id}`;
+        sequel_link.innerHTML = ` 
+          <div>
+              <div class="name">${movie.sequelLabel}</div>
+          </div>`;
+
+        // Add sequel link to the container
+        sequel.appendChild(sequel_link);
+    }
 
     const duration = document.querySelector('.duration');
     duration.textContent = movie.duration;
