@@ -70,8 +70,6 @@ function evolutionsRequest(id) {
 function generationsRequest(id) {
   // Formater l'ID pour qu'il ait toujours 3 chiffres avec des zéros devant
   const formattedId = id.toString().padStart(3, '0');
-  // Formater l'ID pour qu'il ait toujours 3 chiffres avec des zéros devant
-  const formattedId = id.toString().padStart(3, '0');
 
   return `SELECT DISTINCT ?pokemon ?pokemonLabel ?generationLabel WHERE {
         # Identify Pokémon directly by National Pokédex Number
