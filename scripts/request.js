@@ -16,7 +16,9 @@ function pokemonsRequestWikiData() {
     `;
 }
 
-function pokemonsRequestTriplyDB() {}
+function pokemonsRequestTriplyDB() {
+    return `PREFIX poke: <https://triplydb.com/academy/pokemon/vocab/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb (GROUP_CONCAT(?typeLabel; separator=', ') AS ?types) WHERE {?pokemon poke:name ?name; poke:description ?description; poke:type ?type; poke:species ?species; poke:baseHP ?baseHP; poke:baseAttack ?baseAttack; poke:baseDefense ?baseDefense; poke:baseSpAtk ?baseSpAtk; poke:baseSpDef ?baseSpDef; poke:baseSpeed ?baseSpeed; poke:length ?length; poke:weight ?weight; poke:nationalNumber ?nb . ?species rdfs:label ?speciesLabel . ?type rdfs:label ?typeLabel FILTER(lang(?description) = 'fr-fr' && lang(?name) = 'fr-fr')} GROUP BY ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb ORDER BY ?nb`;
+}
 
 function moviesRequestWikiData() {
   return `SELECT DISTINCT 
@@ -78,6 +80,16 @@ ORDER BY ?earliestReleaseDate
 `;
 }
 
-function pokemonsRequestTriplyDB() {
-    
+function gamesRequestWikiData(){
+    return `SELECT DISTINCT ?videogame ?videogameLabel ?releaseDate ?directorLabel ?locationLabel 
+    WHERE {
+      ?videogame wdt:P31 wd:Q7889;
+                 wdt:P179 wd:Q24558579.
+      OPTIONAL { ?videogame wdt:P577 ?releaseDate. }
+      OPTIONAL { ?videogame wdt:P57 ?director. }
+      OPTIONAL { ?videogame wdt:P840 ?location. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". }
+    }
+    ORDER BY ?releaseDate
+    `
 }
