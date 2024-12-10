@@ -20,7 +20,7 @@ function renderPokemons(pokemons) {
         card.className = 'pkmn-card border border-2 border-dark rounded-3 overflow-hidden shadow-lg';
         card.innerHTML = `
             <div class="card-header">
-                <div class="number">${parseInt(pokemon.id)}</div>
+                <div class="number">${pokemon.id}</div>
                 <div class="name">${pokemon.name}</div>
             </div>
             <div class="card-body">
