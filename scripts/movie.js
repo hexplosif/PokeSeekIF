@@ -26,6 +26,7 @@ async function fetchMovie() {
     }));
     return movie;
 }
+
 async function getSpecificMoviePosterURLFromTMDb(tmdbID) {
     const tmdbUrl = `${TMDb_BASE_URL}${tmdbID}?api_key=${API_KEY}`;
     try {
@@ -45,6 +46,14 @@ async function renderMovie(movie) {
     mainInfo.querySelector('.name').textContent = movie.name;
 
     const releaseDate = document.querySelector('.releaseDate');
+    const old_date = new Date(movie.releaseDate);
+    const month   = old_date.getUTCMonth() + 1; // months from 1-12
+    const day     = old_date.getUTCDate();
+    const year    = old_date.getUTCFullYear();
+    const newDate = year + "/" + month + "/" + day;
+
+    movie.releaseDate = newDate;
+
     releaseDate.textContent = movie.releaseDate;
 
     const director = document.querySelector('.director');
@@ -76,6 +85,7 @@ async function renderMovie(movie) {
 
     // Fetch poster URL asynchronously
     const posterUrl = await getSpecificMoviePosterURLFromTMDb(movie.tmdbID);
+    console.log(movie.releaseDate);
 
     // Create and populate the movie poster
     const poster_fetched = document.createElement("div");
