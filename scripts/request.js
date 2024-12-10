@@ -70,6 +70,8 @@ function evolutionsRequest(id) {
 function generationsRequest(id) {
   // Formater l'ID pour qu'il ait toujours 3 chiffres avec des zéros devant
   const formattedId = id.toString().padStart(3, '0');
+  // Formater l'ID pour qu'il ait toujours 3 chiffres avec des zéros devant
+  const formattedId = id.toString().padStart(3, '0');
 
   return `SELECT DISTINCT ?pokemon ?pokemonLabel ?generationLabel WHERE {
         # Identify Pokémon directly by National Pokédex Number
@@ -97,6 +99,7 @@ function pokemonGamesRequest(id) {
   `;
 }
 
+
 function pokemonsRequestTriplyDB() {
   return `
     PREFIX poke: <https://triplydb.com/academy/pokemon/vocab/>
@@ -122,7 +125,7 @@ function pokemonsRequestTriplyDB() {
       ?species rdfs:label ?speciesLabel.
       ?type rdfs:label ?typeLabel.
 
-      FILTER(LANG(?description) = 'fr-fr' && LANG(?name) = 'fr-fr')
+      FILTER(lang(?description) = 'fr-fr' && lang(?name) = 'fr-fr')
     }
     GROUP BY ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb
     ORDER BY ?nb
@@ -166,6 +169,7 @@ function moviesRequestWikiData() {
   ?movieLabel 
   (MIN(?releaseDate) AS ?earliestReleaseDate) 
   ?sequelLabel 
+  ?sequel
   (GROUP_CONCAT(DISTINCT ?directorLabel; separator=",") AS ?directors)
   (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=",") AS ?screenwriters)
   ?productionCompanyLabel 
@@ -195,14 +199,15 @@ WHERE {
   OPTIONAL { ?movie wdt:P2047 ?duration. }   # Duration
   OPTIONAL { ?movie wdt:P3834 ?eirinRating. } # EIRIN film rating
   OPTIONAL { ?movie wdt:P4947 ?tmdbID. }     # TMDb ID
-  OPTIONAL { ?movie wdt:P4969 ?sequel. }  # Sequel
+  OPTIONAL { ?movie wdt:P156 ?sequel. }  # Sequel
   OPTIONAL { 
     ?movie p:P444 ?metacriticStatement. 
     ?metacriticStatement ps:P444 ?metacriticScore. 
     ?metacriticStatement pq:P447 wd:Q150248. 
   }
 
-  
+  FILTER(?movie = ${id})
+
   SERVICE wikibase:label { 
     bd:serviceParam wikibase:LANGuage "[AUTO_LANGUAGE],en,fr". 
   }
@@ -215,8 +220,46 @@ GROUP BY
   ?duration
   ?tmdbID
   ?imdbID
+  ?sequel
   ?metacriticScore
   ?eirinRatingLabel
+ORDER BY ?earliestReleaseDate
+`;
+}
+
+
+function moviesRequestWikiData() {
+  return `SELECT DISTINCT 
+  ?movie 
+  ?movieLabel 
+  (MIN(?releaseDate) AS ?earliestReleaseDate) 
+  (GROUP_CONCAT(DISTINCT ?directorLabel; separator=",") AS ?directors)
+  (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=",") AS ?screenwriters)
+  ?tmdbID
+WHERE {
+  # Find items that are instances of anime films or general films
+  ?movie wdt:P31 ?movieType;
+         wdt:P527* ?series. # Part of a series
+  
+  # Ensure the type is either anime film or general film
+  VALUES ?movieType { wd:Q20650540 wd:Q11424 } # Anime film or general film
+
+  # Ensure the series is related to Pokémon
+  ?series wdt:P179 wd:Q97138261. # "Pokémon" series
+
+  # Optional properties for additional information
+  OPTIONAL { ?movie wdt:P577 ?releaseDate. } # Release date
+  OPTIONAL { ?movie wdt:P4947 ?tmdbID. }     # TMDb ID
+
+  
+  SERVICE wikibase:label { 
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,fr". 
+  }
+}
+GROUP BY 
+  ?movie
+  ?movieLabel
+  ?tmdbID
 ORDER BY ?earliestReleaseDate
 `;
 }
