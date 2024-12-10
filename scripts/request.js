@@ -45,18 +45,15 @@ function moviesRequestWikiData() {
   ?movie 
   ?movieLabel 
   (MIN(?releaseDate) AS ?earliestReleaseDate) 
-  ?originalTitle 
   ?sequelLabel 
-  ?directorLabel 
-  ?screenwriterLabel 
-  ?producerLabel 
+  (GROUP_CONCAT(DISTINCT ?directorLabel; separator=",") AS ?directors)
+  (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=",") AS ?screenwriters)
   ?productionCompanyLabel 
   ?duration 
-  ?colorLabel 
+  ?tmdbID
   ?imdbID 
   ?metacriticScore 
   ?eirinRatingLabel
-  ?tmdbID
 WHERE {
   # Find items that are instances of anime films or general films
   ?movie wdt:P31 ?movieType;
@@ -71,31 +68,35 @@ WHERE {
   # Optional properties for additional information
   OPTIONAL { ?movie wdt:P577 ?releaseDate. } # Release date
   OPTIONAL { ?movie wdt:P345 ?imdbID. }      # IMDb ID
-  OPTIONAL { ?movie wdt:P57  ?director. }    # Director
-  OPTIONAL { ?movie wdt:P1476 ?originalTitle. } # Original title
-  OPTIONAL { ?movie wdt:P156  ?sequel. }     # Sequels
+  OPTIONAL { ?movie wdt:P57  ?director. }    # Directors
   OPTIONAL { ?movie wdt:P58   ?screenwriter. } # Screenwriter
   OPTIONAL { ?movie wdt:P162  ?producer. }   # Producer
   OPTIONAL { ?movie wdt:P272  ?productionCompany. } # Production company
   OPTIONAL { ?movie wdt:P2047 ?duration. }   # Duration
-  OPTIONAL { ?movie wdt:P462  ?color. }      # Color
   OPTIONAL { ?movie wdt:P3834 ?eirinRating. } # EIRIN film rating
-  OPTIONAL { ?movie wdt:P4947 ?tmdbID. }  # TMDb ID
-  
-  # Metacritic review score
+  OPTIONAL { ?movie wdt:P4947 ?tmdbID. }     # TMDb ID
+  OPTIONAL { ?movie wdt:P4969 ?sequel. }  # Sequel
   OPTIONAL { 
     ?movie p:P444 ?metacriticStatement. 
     ?metacriticStatement ps:P444 ?metacriticScore. 
     ?metacriticStatement pq:P447 wd:Q150248. 
   }
 
-
-  # Language labels
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+  
+  SERVICE wikibase:label { 
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,fr". 
+  }
 }
-GROUP BY ?movie ?movieLabel ?originalTitle ?sequelLabel ?directorLabel ?screenwriterLabel 
-         ?producerLabel ?productionCompanyLabel ?duration ?colorLabel ?imdbID 
-         ?metacriticScore ?eirinRatingLabel ?tmdbID
+GROUP BY 
+  ?movie
+  ?movieLabel
+  ?sequelLabel 
+  ?productionCompanyLabel 
+  ?duration
+  ?tmdbID
+  ?imdbID
+  ?metacriticScore
+  ?eirinRatingLabel
 ORDER BY ?earliestReleaseDate
 `;
 }

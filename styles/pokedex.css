@@ -9,6 +9,12 @@
     transition: .1s;
 }
 
+.pkmn-card:hover {
+    transform: scale(1.05);
+    background-color: #444;
+}
+
+
 .pkmn-card .card-header {
     display: flex;
     position: relative;
