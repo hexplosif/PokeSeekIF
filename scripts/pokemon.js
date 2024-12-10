@@ -93,9 +93,6 @@ function renderPokemon(pokemon) {
     p.textContent = pokemon.description;
     description.appendChild(p);
 
-    const abilities = document.querySelector('.abilitie');
-    abilities.textContent = pokemon.abilities;
-
     const height = document.querySelector('.height');
     height.style.width = Math.min(pokemon.height / 10 / MAX_HEIGHT * 100, 100) + '%';
     height.textContent = pokemon.height / 10 + ' m';
