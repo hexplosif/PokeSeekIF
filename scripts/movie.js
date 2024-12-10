@@ -120,7 +120,6 @@ async function main() {
     const id = new URLSearchParams(window.location.search).get('id');
 
     const movies = await fetchMovie(id);
-    // console.log(movies)
     renderMovie(movies);
 }
 
