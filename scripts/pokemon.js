@@ -1,24 +1,82 @@
 // Get pokemon data from TriplyDB
-async function fetchPokemon() {
-    const query = pokemonsRequestTriplyDB();
+async function fetchPokemon(id) {
+    const query = pokemonRequestTriplyDB(id);
     const url = getQueryUrl(TRIPLY_DB_API, query);
-    const response = await fetch(url).then(response => response.json());
-    const pokemons = response.map(pokemon => ({
-        id: pokemon.nb,
-        name: pokemon.name,
-        description: pokemon.description,
-        species: pokemon.speciesLabel,
-        baseHP: pokemon.baseHP,
-        baseAttack: pokemon.baseAttack,
-        baseDefense: pokemon.baseDefense,
-        baseSpAtk: pokemon.baseSpAtk,
-        baseSpDef: pokemon.baseSpDef,
-        baseSpeed: pokemon.baseSpeed,
-        height: pokemon.length,
-        weight: pokemon.weight,
-        types: pokemon.types.split(', '),
+    const pokemon = await fetch(url).then(response => response.json());
+
+    const generationQuery = generationsRequest(id);
+    const generationUrl = getQueryUrl(WIKIDATA_API, generationQuery);
+    const response = await fetch(generationUrl).then(response => response.json());
+    const generation = response.results.bindings;
+
+    const evolutionQuery = evolutionsRequest(id);
+    const evolutionUrl = getQueryUrl(WIKIDATA_API, evolutionQuery);
+    const response2 = await fetch(evolutionUrl).then(response => response.json());
+    const evolutions = response2.results.bindings;
+
+    // Extraire les noms d'évolution et les numéros d'évolution
+    const evolLabels = evolutions[0].evolLabels.value.split(', ');
+    const evolNumbers = evolutions[0].evolNumbers.value.split(', ');
+
+    // Créer un tableau des évolutions (label et numéro) et trier par numéro
+    const evolutionsWithNumbers = evolLabels.map((label, index) => ({
+        name: label,
+        number: parseInt(evolNumbers[index])
     }));
-    return pokemons;
+
+    // Trier les évolutions par numéro
+    evolutionsWithNumbers.sort((a, b) => (a.number) - (b.number));
+
+    console.log(evolutionsWithNumbers);
+    // Trouver l'évolution du Pokémon actuel (ID)
+
+    const currentEvolution = evolutionsWithNumbers.find(evolution => evolution.number === parseInt(id));
+    
+
+    let preEvolution = null;
+    let evolution = null;
+
+    // Identifier la préévolution et l'évolution
+    if (evolutionsWithNumbers.length === 3) {
+        // Si plusieurs évolutions, la première est la préévolution, la dernière est l'évolution
+        preEvolution = evolutionsWithNumbers[0];
+        evolution = evolutionsWithNumbers[evolutionsWithNumbers.length - 1];
+    } else if (evolutionsWithNumbers.length === 2) {
+        // Si une seule évolution, elle est la préévolution
+        if (currentEvolution === evolutionsWithNumbers[0]) {
+            evolution = evolutionsWithNumbers[1];
+        } else {
+            preEvolution = evolutionsWithNumbers[0];
+        }
+    } 
+
+
+    // Organiser les données pour l'affichage
+    return {
+        id: id,
+        name: pokemon[0].name,
+        description: pokemon[0].description,
+        species: pokemon[0].speciesLabel,
+        abilities: pokemon[0].abilities,
+        height: pokemon[0].length,
+        weight: pokemon[0].weight,
+        baseHP: pokemon[0].baseHP,
+        baseAttack: pokemon[0].baseAttack,
+        baseDefense: pokemon[0].baseDefense,
+        baseSpAtk: pokemon[0].baseSpAtk,
+        baseSpDef: pokemon[0].baseSpDef,
+        baseSpeed: pokemon[0].baseSpeed,
+        types: pokemon[0].types.split(', '),
+        generation: generation[0].generationLabel.value.split(' ')
+            .slice(0, 2) // Prendre seulement les deux premiers mots
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
+            .join(' '), // Rejoindre les mots
+        evolutions: {
+            preEvolution: preEvolution,
+            current: { name: pokemon[0].name, number: id },
+            evolution: evolution
+        }
+    };
 }
 
 
@@ -30,20 +88,24 @@ function renderPokemon(pokemon) {
 
     const image = document.querySelector('.pokemon');
     image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
+    image.alt = pokemon.name;
 
     const description = document.querySelector('.description');
-    description.querySelector('p').textContent = pokemon.description;
+    description.innerHTML = '';
+    const p = document.createElement('p');
+    p.textContent = pokemon.description;
+    description.appendChild(p);
 
     const abilities = document.querySelector('.abilitie');
     abilities.textContent = pokemon.abilities;
 
     const height = document.querySelector('.height');
-    height.style.width = Math.min(pokemon.height/10 / MAX_HEIGHT * 100, 100) + '%';
-    height.textContent = pokemon.height/10 + ' m';
+    height.style.width = Math.min(pokemon.height / 10 / MAX_HEIGHT * 100, 100) + '%';
+    height.textContent = pokemon.height / 10 + ' m';
 
     const weight = document.querySelector('.weight');
-    weight.style.width = Math.min(pokemon.weight/10 / MAX_WEIGHT * 100, 100) + '%';
-    weight.textContent = pokemon.weight/10 + ' kg';
+    weight.style.width = Math.min(pokemon.weight / 10 / MAX_WEIGHT * 100, 100) + '%';
+    weight.textContent = pokemon.weight / 10 + ' kg';
 
     const hp = document.querySelector('.hp');
     hp.style.width = Math.min(pokemon.baseHP / MAX_HP * 100, 100) + '%';
@@ -86,13 +148,86 @@ function renderPokemon(pokemon) {
     });
 
     const generation = document.querySelector('.generation');
+    generation.querySelector('.name').innerHTML = '';
     generation.querySelector('.name').textContent = pokemon.generation;
+
+    const evolutions = document.querySelector('.evolutions');
+
+    // Créer un tableau des évolutions
+    const evolutionsList = [];
+
+    // Ajouter le Pokémon actuel au tableau
+    evolutionsList.push({
+        name: pokemon.evolutions.current.name.charAt(0).toUpperCase() + pokemon.name.slice(1).toLowerCase(),
+        number: parseInt(pokemon.evolutions.current.number),
+        type: 'current'
+    });
+
+    // Ajouter la préévolution (si elle existe)
+    if (pokemon.evolutions.preEvolution) {
+        evolutionsList.push({
+            name: pokemon.evolutions.preEvolution.name,
+            number: parseInt(pokemon.evolutions.preEvolution.number),
+            type: 'preEvolution'
+        });
+    }
+
+    // Ajouter l'évolution (si elle existe)
+    if (pokemon.evolutions.evolution) {
+        evolutionsList.push({
+            name: pokemon.evolutions.evolution.name,
+            number: parseInt(pokemon.evolutions.evolution.number),
+            type: 'evolution'
+        });
+    }
+
+    // Trier les évolutions par numéro
+    evolutionsList.sort((a, b) => parseInt(a.number) - parseInt(b.number));
+
+    console.log(evolutionsList);
+    // Réinitialiser le contenu des évolutions
+    evolutions.innerHTML = '';
+
+    // Créer les éléments d'évolution dans l'ordre
+    evolutionsList.forEach((evolution, index) => {
+        const evolutionElement = document.createElement('a');
+        evolutionElement.style.textDecoration = 'none';
+
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('name');
+        nameDiv.style.color = 'white';
+        nameDiv.textContent = evolution.name;
+
+        const imageDiv = document.createElement('img');
+        
+        // Ajouter la classe spécifique à chaque type d'évolution (actual, evolution)
+        if (evolution.type === 'current') {
+            evolutionElement.classList.add('actual');
+            imageDiv.classList.add('actual-pokemon');
+        } else {
+            evolutionElement.classList.add('evolution');
+            imageDiv.classList.add('evolution-pokemon');
+        }
+
+        imageDiv.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${parseInt(evolution.number)}.png`;
+        imageDiv.alt = evolution.name;
+
+        // Ajouter les éléments créés à la div d'évolution
+        evolutionElement.appendChild(imageDiv);
+        evolutionElement.appendChild(nameDiv);
+
+        // Ajouter un lien vers la page du Pokémon
+        evolutionElement.href = `pokemon.html?id=${evolution.number}`;
+
+        // Ajouter l'élément d'évolution à la section
+        evolutions.appendChild(evolutionElement);
+    });
 }
 
 async function main() {
-    const pokemons = await fetchPokemon();
-    const id = new URLSearchParams(window.location.search).get('id') - 1;
-    renderPokemon(pokemons[id]);
+    const id = new URLSearchParams(window.location.search).get('id');
+    const pokemon = await fetchPokemon(id);
+    renderPokemon(pokemon);
 }
 
 main();
