@@ -32,18 +32,6 @@ async function fetchMovie(id) {
     return movie;
 }
 
-async function getSpecificMoviePosterURLFromTMDb(tmdbID) {
-    const tmdbUrl = `${TMDb_BASE_URL}${tmdbID}?api_key=${API_KEY}`;
-    try {
-        const response = await fetch(tmdbUrl);
-        const data = await response.json();
-        return data.poster_path ? `${TMDb_IMAGE_BASE_URL}${data.poster_path}` : "https://via.placeholder.com/200x300"; // Fallback image
-    } catch (error) {
-        console.error("Error fetching movie data from TMDb:", error);
-        return "https://via.placeholder.com/200x300"; // Fallback image
-    }
-}
-
 // Render the movie in the movie page
 async function renderMovie(movie) {
     movie = movie[0];

@@ -1,8 +1,3 @@
-// TMDB API Configuration
-const API_KEY = "5839557fa234ebf4cdc0837c8c37c3b1";
-const TMDb_BASE_URL = "https://api.themoviedb.org/3/movie/";
-const TMDb_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w300/";
-
 // Fetch movie data from Wikidata SPARQL query
 async function fetchSPARQLMoviesData() {
   const query = moviesRequestWikiData(); // Generate SPARQL query

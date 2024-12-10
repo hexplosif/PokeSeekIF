@@ -9,6 +9,17 @@ async function fetchPokemon(id) {
     const response = await fetch(generationUrl).then(response => response.json());
     const generation = response.results.bindings;
 
+    const gamesQuery = pokemonGamesRequest(id);
+    const gamesUrl = getQueryUrl(WIKIDATA_API, gamesQuery);
+    const response1 = await fetch(gamesUrl).then(response => response.json());
+    const games = response1.results.bindings.map(game => {
+        return {
+            name: game.gameLabel.value,
+            publicationDate: game.publicationDate.value.split('-')[0]
+        };
+    });
+    
+
     const evolutionQuery = evolutionsRequest(id);
     const evolutionUrl = getQueryUrl(WIKIDATA_API, evolutionQuery);
     const response2 = await fetch(evolutionUrl).then(response => response.json());
@@ -27,7 +38,6 @@ async function fetchPokemon(id) {
     // Trier les évolutions par numéro
     evolutionsWithNumbers.sort((a, b) => (a.number) - (b.number));
 
-    console.log(evolutionsWithNumbers);
     // Trouver l'évolution du Pokémon actuel (ID)
 
     const currentEvolution = evolutionsWithNumbers.find(evolution => evolution.number === parseInt(id));
@@ -61,7 +71,8 @@ async function fetchPokemon(id) {
             niveau1: niveau1,
             niveau2: niveau2,
             current: currentEvolution,
-        }
+        },
+        games: games,
     };
 }
 
@@ -187,6 +198,19 @@ function renderPokemon(pokemon) {
         niveau2.href = `pokemon.html?id=${pokemon.evolutions.niveau2.number}`;
         evolutions.appendChild(niveau2);
     }
+
+    const games = document.querySelector('.games-container');
+    games.innerHTML = '';
+    pokemon.games.forEach(game => {
+        const gameElement = document.createElement('a');
+        gameElement.className = 'game';
+        gameElement.innerHTML = `
+            <div class="name">${game.name} (${game.publicationDate})</div>
+        `;
+        gameElement.href = `game.html?name=${game.name}`;
+        games.appendChild(gameElement);
+    });
+
 }
 
 async function main() {
