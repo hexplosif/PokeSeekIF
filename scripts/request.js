@@ -34,6 +34,7 @@ function moviesRequestWikiData() {
   ?imdbID 
   ?metacriticScore 
   ?eirinRatingLabel
+  ?tmdbID
 WHERE {
   # Find items that are instances of anime films or general films
   ?movie wdt:P31 ?movieType;
@@ -56,7 +57,9 @@ WHERE {
   OPTIONAL { ?movie wdt:P272  ?productionCompany. } # Production company
   OPTIONAL { ?movie wdt:P2047 ?duration. }   # Duration
   OPTIONAL { ?movie wdt:P462  ?color. }      # Color
-
+  OPTIONAL { ?movie wdt:P3834 ?eirinRating. } # EIRIN film rating
+  OPTIONAL { ?movie wdt:P4947 ?tmdbID. }  # TMDb ID
+  
   # Metacritic review score
   OPTIONAL { 
     ?movie p:P444 ?metacriticStatement. 
@@ -64,15 +67,13 @@ WHERE {
     ?metacriticStatement pq:P447 wd:Q150248. 
   }
 
-  # EIRIN film rating
-  OPTIONAL { ?movie wdt:P3834 ?eirinRating. } # EIRIN film rating
 
   # Language labels
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
 GROUP BY ?movie ?movieLabel ?originalTitle ?sequelLabel ?directorLabel ?screenwriterLabel 
          ?producerLabel ?productionCompanyLabel ?duration ?colorLabel ?imdbID 
-         ?metacriticScore ?eirinRatingLabel
+         ?metacriticScore ?eirinRatingLabel ?tmdbID
 ORDER BY ?earliestReleaseDate
 `;
 }
