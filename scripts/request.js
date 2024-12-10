@@ -237,3 +237,29 @@ function gamesRequestWikiData() {
     ORDER BY ?releaseDate
     `
 }
+/* function gamesRequestWikiData(){
+    return `SELECT ?videogame ?videogameLabel 
+       (GROUP_CONCAT(DISTINCT ?directorLabel; separator=", ") AS ?directors)
+       (GROUP_CONCAT(DISTINCT ?locationLabel; separator=", ") AS ?locations)
+       (MAX(SUBSTR(STR(?unformattedReleaseDate), 1, 10)) AS ?releaseDate)
+      WHERE {
+        ?videogame wdt:P31 wd:Q7889;
+                  wdt:P179 wd:Q24558579.
+        OPTIONAL { ?videogame wdt:P577 ?unformattedReleaseDate. }
+        OPTIONAL {
+          ?videogame wdt:P57 ?director. 
+          ?director rdfs:label ?directorLabel. 
+          FILTER(LANG(?directorLabel) = "en").
+        }
+        OPTIONAL { 
+          ?videogame wdt:P840 ?location. 
+          ?location rdfs:label ?locationLabel. 
+          FILTER(LANG(?locationLabel) = "en").
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr, en". }
+      }
+      GROUP BY ?videogame ?videogameLabel
+      ORDER BY ?releaseDate
+
+    `
+}*/
