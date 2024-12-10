@@ -187,34 +187,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
     width: 100%;
     gap: 1rem;
 }
 
-.right-container .evolutions .actual {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.right-container .evolutions .actual .actual-pokemon {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-}
-
-.right-container .evolutions .actual .name {
-    font-size: 1rem;
-    font-weight: 700;
-}
 
 .right-container .evolutions .evolution {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    text-decoration: none;
+    color: #fff;
+    padding: 1rem;
+}
+
+.right-container .evolutions .actual {
+    background-color: #333;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    -ms-border-radius: 1rem;
+    -o-border-radius: 1rem;
 }
 
 .right-container .evolutions .evolution .evolution-pokemon {

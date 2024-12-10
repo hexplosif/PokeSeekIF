@@ -32,24 +32,9 @@ async function fetchPokemon(id) {
 
     const currentEvolution = evolutionsWithNumbers.find(evolution => evolution.number === parseInt(id));
     
-
-    let preEvolution = null;
-    let evolution = null;
-
-    // Identifier la préévolution et l'évolution
-    if (evolutionsWithNumbers.length === 3) {
-        // Si plusieurs évolutions, la première est la préévolution, la dernière est l'évolution
-        preEvolution = evolutionsWithNumbers[0];
-        evolution = evolutionsWithNumbers[evolutionsWithNumbers.length - 1];
-    } else if (evolutionsWithNumbers.length === 2) {
-        // Si une seule évolution, elle est la préévolution
-        if (currentEvolution === evolutionsWithNumbers[0]) {
-            evolution = evolutionsWithNumbers[1];
-        } else {
-            preEvolution = evolutionsWithNumbers[0];
-        }
-    } 
-
+    let base = evolutionsWithNumbers[0];
+    let niveau1 = evolutionsWithNumbers[1];
+    let niveau2 = evolutionsWithNumbers[2];
 
     // Organiser les données pour l'affichage
     return {
@@ -72,9 +57,10 @@ async function fetchPokemon(id) {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
             .join(' '), // Rejoindre les mots
         evolutions: {
-            preEvolution: preEvolution,
-            current: { name: pokemon[0].name, number: id },
-            evolution: evolution
+            base: base,
+            niveau1: niveau1,
+            niveau2: niveau2,
+            current: currentEvolution,
         }
     };
 }
@@ -153,75 +139,54 @@ function renderPokemon(pokemon) {
 
     const evolutions = document.querySelector('.evolutions');
 
-    // Créer un tableau des évolutions
-    const evolutionsList = [];
+    const base = document.createElement('a');
+    
+    // Si le Pokémon actuel est le Pokémon de base
 
-    // Ajouter le Pokémon actuel au tableau
-    evolutionsList.push({
-        name: pokemon.evolutions.current.name.charAt(0).toUpperCase() + pokemon.name.slice(1).toLowerCase(),
-        number: parseInt(pokemon.evolutions.current.number),
-        type: 'current'
-    });
-
-    // Ajouter la préévolution (si elle existe)
-    if (pokemon.evolutions.preEvolution) {
-        evolutionsList.push({
-            name: pokemon.evolutions.preEvolution.name,
-            number: parseInt(pokemon.evolutions.preEvolution.number),
-            type: 'preEvolution'
-        });
+    if (parseInt(pokemon.id) === pokemon.evolutions.base.number) {
+        base.className = 'evolution actual';
+    } else {
+        base.className = 'evolution';
     }
+    base.innerHTML = `
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.evolutions.base.number}.png" alt="${pokemon.evolutions.base.name}" class="evolution-pokemon">
+        <div class="name text-decoration-none">${pokemon.evolutions.base.name}</div>
+    `;
+    base.href = `pokemon.html?id=${pokemon.evolutions.base.number}`;
 
-    // Ajouter l'évolution (si elle existe)
-    if (pokemon.evolutions.evolution) {
-        evolutionsList.push({
-            name: pokemon.evolutions.evolution.name,
-            number: parseInt(pokemon.evolutions.evolution.number),
-            type: 'evolution'
-        });
-    }
+    evolutions.appendChild(base);
 
-    // Trier les évolutions par numéro
-    evolutionsList.sort((a, b) => parseInt(a.number) - parseInt(b.number));
-
-    console.log(evolutionsList);
-    // Réinitialiser le contenu des évolutions
-    evolutions.innerHTML = '';
-
-    // Créer les éléments d'évolution dans l'ordre
-    evolutionsList.forEach((evolution, index) => {
-        const evolutionElement = document.createElement('a');
-        evolutionElement.style.textDecoration = 'none';
-
-        const nameDiv = document.createElement('div');
-        nameDiv.classList.add('name');
-        nameDiv.style.color = 'white';
-        nameDiv.textContent = evolution.name;
-
-        const imageDiv = document.createElement('img');
-        
-        // Ajouter la classe spécifique à chaque type d'évolution (actual, evolution)
-        if (evolution.type === 'current') {
-            evolutionElement.classList.add('actual');
-            imageDiv.classList.add('actual-pokemon');
+    if (pokemon.evolutions.niveau1 !== undefined) {
+        const niveau1 = document.createElement('a');
+        // Si le Pokémon actuel est le premier niveau d'évolution
+        if (parseInt(pokemon.id) === pokemon.evolutions.niveau1.number) {
+            niveau1.className = 'evolution actual';
         } else {
-            evolutionElement.classList.add('evolution');
-            imageDiv.classList.add('evolution-pokemon');
+            niveau1.className = 'evolution';
         }
+        niveau1.innerHTML = `
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.evolutions.niveau1.number}.png" alt="${pokemon.evolutions.niveau1.name}" class="evolution-pokemon">
+            <div class="name text-decoration-none">${pokemon.evolutions.niveau1.name}</div>
+        `;
+        niveau1.href = `pokemon.html?id=${pokemon.evolutions.niveau1.number}`;
+        evolutions.appendChild(niveau1);
+    }
 
-        imageDiv.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${parseInt(evolution.number)}.png`;
-        imageDiv.alt = evolution.name;
-
-        // Ajouter les éléments créés à la div d'évolution
-        evolutionElement.appendChild(imageDiv);
-        evolutionElement.appendChild(nameDiv);
-
-        // Ajouter un lien vers la page du Pokémon
-        evolutionElement.href = `pokemon.html?id=${evolution.number}`;
-
-        // Ajouter l'élément d'évolution à la section
-        evolutions.appendChild(evolutionElement);
-    });
+    if (pokemon.evolutions.niveau2 !== undefined) {
+        const niveau2 = document.createElement('a');
+        // Si le Pokémon actuel est le deuxième niveau d'évolution
+        if (parseInt(pokemon.id) === pokemon.evolutions.niveau2.number) {
+            niveau2.className = 'evolution actual';
+        } else {
+            niveau2.className = 'evolution';
+        }
+        niveau2.innerHTML = `
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.evolutions.niveau2.number}.png" alt="${pokemon.evolutions.niveau2.name}" class="evolution-pokemon">
+            <div class="name text-decoration-none">${pokemon.evolutions.niveau2.name}</div>
+        `;
+        niveau2.href = `pokemon.html?id=${pokemon.evolutions.niveau2.number}`;
+        evolutions.appendChild(niveau2);
+    }
 }
 
 async function main() {
