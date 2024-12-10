@@ -24,6 +24,7 @@ async function fetchMovie(id) {
         metacriticScore: movie.metacriticScore?.value || 'N/A', // Fallback if Metacritic score is missing
         eirinRating: movie.eirinRatingLabel?.value || 'N/A', // Fallback if EIRIN rating is missing
         tmdbID: movie.tmdbID?.value || "2", // Default ID if none provided
+        sequel: movie.sequelLabel?.value || 'N/A', // Fallback if SequelLabel is missing
     }));
 
     return movie;
@@ -65,6 +66,9 @@ async function renderMovie(movie) {
     const producer = document.querySelector('.producer');
     producer.textContent = movie.producer;
 
+    const sequel = document.querySelector('.sequel');
+    sequel.textContent = movie.sequel;
+
     const duration = document.querySelector('.duration');
     duration.textContent = movie.duration;
 
@@ -77,9 +81,11 @@ async function renderMovie(movie) {
     const metacriticScore = document.querySelector('.metacriticScore');
     metacriticScore.textContent = movie.metacriticScore;
 
-    const eirinRating = document.querySelector('.productionCompany');
+    const eirinRating = document.querySelector('.eirinRating');
     eirinRating.textContent = movie.eirinRating;
 
+    const productionCompany = document.querySelector('.productionCompany');
+    productionCompany.textContent = movie.productionCompany;
 
     const poster = document.querySelector('.poster');
 
