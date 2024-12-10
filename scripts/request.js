@@ -1,18 +1,38 @@
 function pokemonsRequestWikiData() {
-  return `SELECT DISTINCT ?pokemon ?pokemonLabel ?id ?image
-    WHERE
-    {
-        # Identifiez les Pokémon et leur numéro dans le Pokédex National
-        ?pokemon wdt:P31/wdt:P279* wd:Q3966183 .
-        ?pokemon p:P1685 ?statement.
-        ?statement ps:P1685 ?id;
-                pq:P972 wd:Q20005020.
-        FILTER (! wikibase:isSomeValue(?id) )   
-        
-        # Filtrage des langues
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". }
-    }
-    ORDER BY (xsd:integer(?id))
+  return `SELECT DISTINCT ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel 
+       (GROUP_CONCAT(DISTINCT ?typeLabel; separator=", ") AS ?types) 
+       WHERE {
+  
+  # Identifier les Pokémon
+  ?pokemon wdt:P31/wdt:P279* wd:Q3966183 .  # Classe Pokémon
+
+  # Récupérer le numéro de Pokédex
+  ?pokemon wdt:P1685 ?pokedexNumber .
+
+  # Identifier la génération avec P4584
+  ?pokemon wdt:P4584 ?generation .
+  ?generation rdfs:label ?generationLabel .
+
+  # Identifier les types avec des références
+  ?pokemon p:P31 ?typeStatement .
+  ?typeStatement ps:P31 ?type ;
+                 prov:wasDerivedFrom ?reference .  # Vérifie la présence d'une référence
+
+  # Vérifier que le type est un "type de Pokémon"
+  ?type wdt:P1552 wd:Q1266830 .
+
+  # Récupérer les labels en français, puis en anglais si non disponible
+  ?pokemon rdfs:label ?pokemonLabel .
+  ?type rdfs:label ?typeLabel .
+
+  # Filtrer pour récupérer uniquement le label en français, ou anglais si le français n'existe pas
+  FILTER((LANG(?pokemonLabel) = "fr"))
+  FILTER((LANG(?typeLabel) = "fr"))
+  FILTER((LANG(?generationLabel) = "fr"))
+
+}
+GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel
+ORDER BY ?pokedexNumber
     `;
 }
 

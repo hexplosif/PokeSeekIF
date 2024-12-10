@@ -9,8 +9,10 @@
     <link rel="stylesheet" type="text/css" href="styles/pokemon.css">
     <link rel="icon" href="img/ZarbiQ.png">
     <title>Zarb'IF</title>
+    <link rel="stylesheet" href="https://unpkg.com/placeholder-loading/dist/css/placeholder-loading.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
 
 <body class="d-flex h-100 text-center text-white bg-dark flex-column bg-dark min-vh-100">
@@ -52,34 +54,64 @@
         <div class="left-container">
 
             <div class="main-info">
-                <p class="number">001</p>
-                <h1 class="name">Bulbasaur</h1>
+                <div class="number mb-3">
+                    <div class="ph-item bg-dark-subtle p-0 m-0 border-0 rounded-1" style="width: 2rem; height: 1rem;">
+                        <div class="ph-col-4">
+
+                        </div>
+                    </div>
+                </div>
+                <h1 class="name">
+                    <div class="ph-item bg-dark-subtle p-0 m-0 border-0 rounded-1"
+                        style="width: 12rem; height: 2rem;">
+                        <div class="ph-col-12">
+                        </div>
+                    </div>
+                </h1>
             </div>
             <hr>
             <div class="description">
-                <p>Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the
-                    sun's
-                    rays, the seed grows progressively larger.</p>
+                <div class="description ph-item bg-dark-subtle p-0 m-0 border-0 rounded-1 mb-1"
+                    style="width: 50rem; height: 2rem;">
+                    <div class="ph-col-12">
+                    </div>
+                </div>
+                <div class="description ph-item bg-dark-subtle p-0 m-0 border-0 rounded-1 mb-1"
+                    style="width: 40rem; height: 2rem;">
+                    <div class="ph-col-12">
+                    </div>
+                </div>
+                <div class="description ph-item bg-dark-subtle p-0 m-0 border-0 rounded-1 mb-1"
+                    style="width: 20rem; height: 2rem;">
+                    <div class="ph-col-6">
+                    </div>
+                </div>
             </div>
             <hr>
             <div class="caracteristics">
                 <div class="caracteristic">
                     <div class="label">Abilities :</div>
-                    <div class="abilitie">Overgrow</div>
+                    <div class="abilitie">
+                        <div class="abilitie ph-item bg-dark-subtle p-0 m-0 border-0 rounded-1"
+                            style="width: 10rem; height: 2rem;">
+                            <div class="ph-col-12">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="caracteristic-bar">
                     <div class="label">Height</div>
-                    <div class="progress" role="progressbar" aria-valuenow="0.7" aria-valuemin="0" aria-valuemax="5">
+                    <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5">
                         <div class="progress-bar height bg-success progress-bar-striped progress-bar-animated"
-                            style="width: 19%">0.7 m</div>
+                            style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="caracteristic-bar">
                     <div class="label">Weight</div>
                     <div class="progress">
                         <div class="progress-bar weight bg-success progress-bar-striped progress-bar-animated"
-                            role="progressbar" style="width: 6.9%" aria-valuenow="6.9" aria-valuemin="0"
-                            aria-valuemax="100">6.9 kg</div>
+                            role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0"
+                            aria-valuemax="100"></div>
                     </div>
                 </div>
             </div>
@@ -88,81 +120,80 @@
                     <div class="label">HP</div>
                     <div class="progress">
                         <div class="progress-bar hp progress-bar-striped progress-bar-animated" role="progressbar"
-                            style="width: 20%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="255">45</div>
+                            style="width: 0%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="255"></div>
                     </div>
                 </div>
                 <div class="stat-bar">
                     <div class="label">Attack</div>
                     <div class="progress">
                         <div class="progress-bar attack progress-bar-striped progress-bar-animated" role="progressbar"
-                            style="width: 25%" aria-valuenow="49" aria-valuemin="0" aria-valuemax="190">49</div>
+                            style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="190"></div>
                     </div>
                 </div>
                 <div class="stat-bar">
                     <div class="label">Defense</div>
                     <div class="progress">
                         <div class="progress-bar defense progress-bar-striped progress-bar-animated" role="progressbar"
-                            style="width: 22%" aria-valuenow="49" aria-valuemin="0" aria-valuemax="230">49</div>
+                            style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="230"></div>
                     </div>
                 </div>
                 <div class="stat-bar">
                     <div class="label">Sp. Attack</div>
                     <div class="progress">
                         <div class="progress-bar spe-attack progress-bar-striped progress-bar-animated"
-                            role="progressbar" style="width: 25%" aria-valuenow="65" aria-valuemin="0"
-                            aria-valuemax="194">65</div>
+                            role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0"
+                            aria-valuemax="194">0</div>
                     </div>
                 </div>
                 <div class="stat-bar">
                     <div class="label">Sp. Def</div>
                     <div class="progress">
                         <div class="progress-bar spe-defense progress-bar-striped progress-bar-animated"
-                            role="progressbar" style="width: 27%" aria-valuenow="65" aria-valuemin="0"
-                            aria-valuemax="230">65</div>
+                            role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0"
+                            aria-valuemax="230">0</div>
                     </div>
                 </div>
                 <div class="stat-bar">
                     <div class="label">Speed</div>
                     <div class="progress">
                         <div class="progress-bar speed progress-bar-striped progress-bar-animated" role="progressbar"
-                            style="width: 25%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="180">45</div>
+                            style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="180">0</div>
                     </div>
                 </div>
                 <div class="stat-bar">
                     <div class="label">Total</div>
                     <div class="progress">
                         <div class="progress-bar total progress-bar-striped progress-bar-animated" role="progressbar"
-                            style="width: 31.8%" aria-valuenow="318" aria-valuemin="0" aria-valuemax="1000">318</div>
+                            style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000">0</div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="right-container bg-dark-subtle">
             <div class="pokemon-container">
-                <img src="https://raw.githubusercontent.com/pokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-                    alt="Bulbasaur" class="pokemon">
+                <img src="img/loading.gif" alt="Loading..." class="pokemon">
             </div>
             <div class="types">
-                <div class="two-types grass">Grass</div>
-                <div class="two-types poison">Poison</div>
+                <img src="img/loading.gif" alt="Loading..." class="type bg-dark w-100">
             </div>
             <div class="generation">
-                <div class="name">Generation 1</div>
+                <div class="name">
+                    <div class="placeholder-glow">
+                        <span class="placeholder col-12"></span>
+                    </div>
+                </div>
             </div>
             <div class="evolutions">
                 <div class="actual">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-                        alt="Bulbasaur" class="actual-pokemon">
+                    <img src="img/loading.gif" alt="Loading..." class="actual-pokemon">
                     <div class="name">Bulbasaur</div>
                 </div>
                 <div class="evolution">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png"
-                        alt="Ivysaur" class="evolution-pokemon">
+                    <img src="img/loading.gif" alt="Loading..." class="evolution-pokemon">
                     <div class="name">Ivysaur</div>
                 </div>
                 <div class="evolution">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png"
-                        alt="Venusaur" class="evolution-pokemon">
+                    <img src="img/loading.gif" alt="Loading..." class="evolution-pokemon">
                     <div class="name">Venusaur</div>
                 </div>
             </div>

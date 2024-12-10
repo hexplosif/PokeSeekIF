@@ -30,9 +30,13 @@ function renderPokemon(pokemon) {
 
     const image = document.querySelector('.pokemon');
     image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
+    image.alt = pokemon.name;
 
     const description = document.querySelector('.description');
-    description.querySelector('p').textContent = pokemon.description;
+    description.innerHTML = '';
+    const p = document.createElement('p');
+    p.textContent = pokemon.description;
+    description.appendChild(p);
 
     const abilities = document.querySelector('.abilitie');
     abilities.textContent = pokemon.abilities;
