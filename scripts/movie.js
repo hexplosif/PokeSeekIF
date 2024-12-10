@@ -4,8 +4,9 @@ const TMDb_BASE_URL = "https://api.themoviedb.org/3/movie/";
 const TMDb_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w300/";
 
 // Get movie data from TriplyDB
-async function fetchMovie() {
-    const query = moviesRequestWikiData();
+async function fetchMovie(id) {
+    id = "wd:" + id;
+    const query = moviesRequestSpecificWikiData(id);
     const url = getQueryUrl(WIKIDATA_API, query);
     const response = await fetch(url).then((response) => response.json());
 
@@ -24,6 +25,7 @@ async function fetchMovie() {
         eirinRating: movie.eirinRatingLabel?.value || 'N/A', // Fallback if EIRIN rating is missing
         tmdbID: movie.tmdbID?.value || "2", // Default ID if none provided
     }));
+
     return movie;
 }
 
@@ -41,7 +43,7 @@ async function getSpecificMoviePosterURLFromTMDb(tmdbID) {
 
 // Render the movie in the movie page
 async function renderMovie(movie) {
-
+    movie = movie[0];
     const mainInfo = document.querySelector('.main-info');
     mainInfo.querySelector('.name').textContent = movie.name;
 
@@ -51,9 +53,7 @@ async function renderMovie(movie) {
     const day     = old_date.getUTCDate();
     const year    = old_date.getUTCFullYear();
     const newDate = year + "/" + month + "/" + day;
-
     movie.releaseDate = newDate;
-
     releaseDate.textContent = movie.releaseDate;
 
     const director = document.querySelector('.director');
@@ -85,7 +85,6 @@ async function renderMovie(movie) {
 
     // Fetch poster URL asynchronously
     const posterUrl = await getSpecificMoviePosterURLFromTMDb(movie.tmdbID);
-    console.log(movie.releaseDate);
 
     // Create and populate the movie poster
     const poster_fetched = document.createElement("div");
@@ -95,13 +94,15 @@ async function renderMovie(movie) {
       </div>
     `;
     // Add poster to the container
-    console.log(poster_fetched)
     poster.appendChild(poster_fetched);
 }
 
 async function main() {
-    const movies = await fetchMovie();
-    renderMovie(movies[0]);
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    const movies = await fetchMovie(id);
+    console.log(movies)
+    renderMovie(movies);
 }
 
 main();
