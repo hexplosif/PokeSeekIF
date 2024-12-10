@@ -3,7 +3,6 @@ async function fetchPokemon() {
     const query = pokemonsRequestTriplyDB();
     const url = getQueryUrl(TRIPLY_DB_API, query);
     const response = await fetch(url).then(response => response.json());
-    console.log(response);
     const pokemons = response.map(pokemon => ({
         id: pokemon.nb,
         name: pokemon.name,
@@ -92,7 +91,8 @@ function renderPokemon(pokemon) {
 
 async function main() {
     const pokemons = await fetchPokemon();
-    renderPokemon(pokemons[72]);
+    const id = new URLSearchParams(window.location.search).get('id') - 1;
+    renderPokemon(pokemons[id]);
 }
 
 main();
