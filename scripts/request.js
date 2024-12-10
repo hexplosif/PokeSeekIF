@@ -108,6 +108,7 @@ function moviesRequestSpecificWikiData(id) {
   ?movieLabel 
   (MIN(?releaseDate) AS ?earliestReleaseDate) 
   ?sequelLabel 
+  ?sequel
   (GROUP_CONCAT(DISTINCT ?directorLabel; separator=",") AS ?directors)
   (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=",") AS ?screenwriters)
   ?productionCompanyLabel 
@@ -137,7 +138,7 @@ WHERE {
   OPTIONAL { ?movie wdt:P2047 ?duration. }   # Duration
   OPTIONAL { ?movie wdt:P3834 ?eirinRating. } # EIRIN film rating
   OPTIONAL { ?movie wdt:P4947 ?tmdbID. }     # TMDb ID
-  OPTIONAL { ?movie wdt:P4969 ?sequel. }  # Sequel
+  OPTIONAL { ?movie wdt:P156 ?sequel. }  # Sequel
   OPTIONAL { 
     ?movie p:P444 ?metacriticStatement. 
     ?metacriticStatement ps:P444 ?metacriticScore. 
@@ -158,6 +159,7 @@ GROUP BY
   ?duration
   ?tmdbID
   ?imdbID
+  ?sequel
   ?metacriticScore
   ?eirinRatingLabel
 ORDER BY ?earliestReleaseDate

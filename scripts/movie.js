@@ -24,7 +24,9 @@ async function fetchMovie(id) {
         metacriticScore: movie.metacriticScore?.value || 'N/A', // Fallback if Metacritic score is missing
         eirinRating: movie.eirinRatingLabel?.value || 'N/A', // Fallback if EIRIN rating is missing
         tmdbID: movie.tmdbID?.value || "2", // Default ID if none provided
-        sequel: movie.sequelLabel?.value || 'N/A', // Fallback if SequelLabel is missing
+        sequelLabel: movie.sequelLabel?.value || 'N/A', // Fallback if SequelLabel is missing
+        sequel: movie.sequel?.value || 'N/A', // Fallback if SequelLabel is missing
+
     }));
 
     return movie;
@@ -66,8 +68,19 @@ async function renderMovie(movie) {
     const producer = document.querySelector('.producer');
     producer.textContent = movie.producer;
 
-    const sequel = document.querySelector('.sequel');
-    sequel.textContent = movie.sequel;
+    const sequel = document.querySelector('.sequelLabel');
+    
+    const sequel_link = document.createElement('a');
+
+    var text_id = new String(movie.sequel.substring(31))
+    sequel_link.href = `movie.html?id=${text_id}`;
+    sequel_link.innerHTML = ` 
+      <div>
+          <div class="name">${movie.sequelLabel}</div>
+      </div>`;
+
+    // Add sequel link to the container
+    sequel.appendChild(sequel_link);
 
     const duration = document.querySelector('.duration');
     duration.textContent = movie.duration;
@@ -107,7 +120,7 @@ async function main() {
     const id = new URLSearchParams(window.location.search).get('id');
 
     const movies = await fetchMovie(id);
-    console.log(movies)
+    // console.log(movies)
     renderMovie(movies);
 }
 
