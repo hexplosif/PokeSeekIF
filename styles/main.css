@@ -1,8 +1,18 @@
+@font-face {
+    font-family: 'Unown';
+    src: url('/fonts/Unown.ttf') format('truetype');
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: Poppins, sans-serif;
+}
+
+input[type="search"] {
+    font-family: 'Unown', sans-serif;
+    font-size: 16px;
 }
 
 hr {
