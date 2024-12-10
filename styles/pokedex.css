@@ -67,6 +67,7 @@
     align-items: center;
     z-index: 2;
     transition: .1s;
+    color: #fff;
 }
 
 .pkmn-card .card-type .one-type {
