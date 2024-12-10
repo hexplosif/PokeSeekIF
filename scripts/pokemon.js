@@ -3,19 +3,16 @@ async function fetchPokemon(id) {
     const query = pokemonRequestTriplyDB(id);
     const url = getQueryUrl(TRIPLY_DB_API, query);
     const pokemon = await fetch(url).then(response => response.json());
-    console.log(pokemon);
 
     const generationQuery = generationsRequest(id);
     const generationUrl = getQueryUrl(WIKIDATA_API, generationQuery);
     const response = await fetch(generationUrl).then(response => response.json());
     const generation = response.results.bindings;
-    console.log(generation);
 
     const evolutionQuery = evolutionsRequest(id);
     const evolutionUrl = getQueryUrl(WIKIDATA_API, evolutionQuery);
     const response2 = await fetch(evolutionUrl).then(response => response.json());
     const evolutions = response2.results.bindings;
-    console.log(evolutions);
 
     // Extraire les noms d'évolution et les numéros d'évolution
     const evolLabels = evolutions[0].evolLabels.value.split(', ');
@@ -24,27 +21,35 @@ async function fetchPokemon(id) {
     // Créer un tableau des évolutions (label et numéro) et trier par numéro
     const evolutionsWithNumbers = evolLabels.map((label, index) => ({
         name: label,
-        number: evolNumbers[index]
+        number: parseInt(evolNumbers[index])
     }));
 
     // Trier les évolutions par numéro
-    evolutionsWithNumbers.sort((a, b) => parseInt(a.number) - parseInt(b.number));
+    evolutionsWithNumbers.sort((a, b) => (a.number) - (b.number));
 
+    console.log(evolutionsWithNumbers);
     // Trouver l'évolution du Pokémon actuel (ID)
-    const currentEvolution = evolutionsWithNumbers.find(evolution => evolution.number === id);
+
+    const currentEvolution = evolutionsWithNumbers.find(evolution => evolution.number === parseInt(id));
+    
 
     let preEvolution = null;
     let evolution = null;
 
     // Identifier la préévolution et l'évolution
-    if (evolutionsWithNumbers.length >= 2) {
+    if (evolutionsWithNumbers.length === 3) {
         // Si plusieurs évolutions, la première est la préévolution, la dernière est l'évolution
         preEvolution = evolutionsWithNumbers[0];
         evolution = evolutionsWithNumbers[evolutionsWithNumbers.length - 1];
-    } else if (evolutionsWithNumbers.length === 1) {
-        // Si une seule évolution, cette évolution est l'évolution
-        evolution = evolutionsWithNumbers[0];
-    }
+    } else if (evolutionsWithNumbers.length === 2) {
+        // Si une seule évolution, elle est la préévolution
+        if (currentEvolution === evolutionsWithNumbers[0]) {
+            evolution = evolutionsWithNumbers[1];
+        } else {
+            preEvolution = evolutionsWithNumbers[0];
+        }
+    } 
+
 
     // Organiser les données pour l'affichage
     return {
@@ -154,7 +159,7 @@ function renderPokemon(pokemon) {
     // Ajouter le Pokémon actuel au tableau
     evolutionsList.push({
         name: pokemon.evolutions.current.name.charAt(0).toUpperCase() + pokemon.name.slice(1).toLowerCase(),
-        number: pokemon.evolutions.current.number,
+        number: parseInt(pokemon.evolutions.current.number),
         type: 'current'
     });
 
@@ -162,7 +167,7 @@ function renderPokemon(pokemon) {
     if (pokemon.evolutions.preEvolution) {
         evolutionsList.push({
             name: pokemon.evolutions.preEvolution.name,
-            number: pokemon.evolutions.preEvolution.number,
+            number: parseInt(pokemon.evolutions.preEvolution.number),
             type: 'preEvolution'
         });
     }
@@ -171,7 +176,7 @@ function renderPokemon(pokemon) {
     if (pokemon.evolutions.evolution) {
         evolutionsList.push({
             name: pokemon.evolutions.evolution.name,
-            number: pokemon.evolutions.evolution.number,
+            number: parseInt(pokemon.evolutions.evolution.number),
             type: 'evolution'
         });
     }
@@ -179,6 +184,7 @@ function renderPokemon(pokemon) {
     // Trier les évolutions par numéro
     evolutionsList.sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
+    console.log(evolutionsList);
     // Réinitialiser le contenu des évolutions
     evolutions.innerHTML = '';
 
