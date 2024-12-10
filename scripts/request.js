@@ -1,4 +1,4 @@
-function pokemonsRequest() {
+function pokemonsRequestWikiData() {
     return `SELECT DISTINCT ?pokemon ?pokemonLabel ?id ?image
     WHERE
     {
@@ -14,4 +14,8 @@ function pokemonsRequest() {
     }
     ORDER BY (xsd:integer(?id))
     `
-  }
+}
+
+function pokemonsRequestTriplyDB() {
+    
+}

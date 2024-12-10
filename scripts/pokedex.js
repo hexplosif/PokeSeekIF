@@ -1,6 +1,6 @@
 // Get all pokemons from Wikidata
 async function fetchPokemons() {
-    const query = pokemonsRequest();
+    const query = pokemonsRequestWikiData();
     const url = getQueryUrl(WIKIDATA_API, query);
     const response = await fetch(url).then(response => response.json());
     console.log(response.results.bindings);
