@@ -1,29 +1,33 @@
 .movie-card {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
     display: flex;
     position: relative;
-    height: 25%;
-    width: 25%;
-    background-color: #222 !important;
+    background-color: #222;
     margin: 20px;
     flex-direction: column;
     transition: .1s;
 }
 
 .movie-card .card-header {
-    display: flex;
-    position: relative;
     width: 100%;
-    height: 50px;
+    color: white;
+    text-align: center;
     background-color: #666;
 }
 
 .movie-card .card-body {
     width: 100%;
-    height: 250px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     background-color: #333;
     z-index: 2;
     transition: .1s;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    background-color: #444;
 }
