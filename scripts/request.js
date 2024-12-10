@@ -1,43 +1,166 @@
 function pokemonsRequestWikiData() {
   return `SELECT DISTINCT ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel 
-       (GROUP_CONCAT(DISTINCT ?typeLabel; separator=", ") AS ?types) 
-       WHERE {
+      (GROUP_CONCAT(DISTINCT ?typeLabel; separator=", ") AS ?types) 
+      WHERE {
   
-  # Identifier les Pokémon
-  ?pokemon wdt:P31/wdt:P279* wd:Q3966183 .  # Classe Pokémon
+      # Identifier les Pokémon
+      ?pokemon wdt:P31/wdt:P279* wd:Q3966183 .  # Classe Pokémon
 
-  # Récupérer le numéro de Pokédex
-  ?pokemon wdt:P1685 ?pokedexNumber .
+      # Récupérer le numéro de Pokédex
+      ?pokemon wdt:P1685 ?pokedexNumber .
 
-  # Identifier la génération avec P4584
-  ?pokemon wdt:P4584 ?generation .
-  ?generation rdfs:label ?generationLabel .
+      # Identifier la génération avec P4584
+      ?pokemon wdt:P4584 ?generation .
+      ?generation rdfs:label ?generationLabel .
 
-  # Identifier les types avec des références
-  ?pokemon p:P31 ?typeStatement .
-  ?typeStatement ps:P31 ?type ;
-                 prov:wasDerivedFrom ?reference .  # Vérifie la présence d'une référence
+      # Identifier les types avec des références
+      ?pokemon p:P31 ?typeStatement .
+      ?typeStatement ps:P31 ?type ;
+                    prov:wasDerivedFrom ?reference .  # Vérifie la présence d'une référence
 
-  # Vérifier que le type est un "type de Pokémon"
-  ?type wdt:P1552 wd:Q1266830 .
+      # Vérifier que le type est un "type de Pokémon"
+      ?type wdt:P1552 wd:Q1266830 .
 
-  # Récupérer les labels en français, puis en anglais si non disponible
-  ?pokemon rdfs:label ?pokemonLabel .
-  ?type rdfs:label ?typeLabel .
+      # Récupérer les labels en français, puis en anglais si non disponible
+      ?pokemon rdfs:label ?pokemonLabel .
+      ?type rdfs:label ?typeLabel .
 
-  # Filtrer pour récupérer uniquement le label en français, ou anglais si le français n'existe pas
-  FILTER((LANG(?pokemonLabel) = "fr"))
-  FILTER((LANG(?typeLabel) = "fr"))
-  FILTER((LANG(?generationLabel) = "fr"))
+      # Filtrer pour récupérer uniquement le label en français, ou anglais si le français n'existe pas
+      FILTER((LANG(?pokemonLabel) = "fr"))
+      FILTER((LANG(?typeLabel) = "fr"))
+      FILTER((LANG(?generationLabel) = "fr"))
 
-}
-GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel
-ORDER BY ?pokedexNumber
+    }
+    GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel
+    ORDER BY ?xsd:integer(pokedexNumber)
     `;
 }
 
+function evolutionsRequest(id) {
+  // Formater l'ID pour qu'il ait toujours 3 chiffres avec des zéros devant
+  const formattedId = id.toString().padStart(3, '0');
+    return `SELECT DISTINCT ?pokemon ?pokemonLabel ?pokedexNumber (GROUP_CONCAT(DISTINCT ?evolLabel; separator=", ") AS ?evolLabels) (GROUP_CONCAT(DISTINCT ?evolNumber; separator=", ") AS ?evolNumbers) WHERE {
+    
+        # Identifier les Pokémon
+        ?pokemon wdt:P31/wdt:P279* wd:Q3966183 .  # Classe Pokémon
+
+        # Récupérer le numéro de Pokédex
+        ?pokemon wdt:P1685 ?pokedexNumber .
+
+        # Identifier la ligne évolutive du Pokémon
+        ?pokemon wdt:P361 ?evolLineStatement .
+        ?evolLineStatement wdt:P31 wd:Q15795637 .
+        ?evolLineStatement wdt:P527 ?evol .
+
+        # Récupérer les labels du Pokémon
+        ?pokemon rdfs:label ?pokemonLabel .
+        ?evol rdfs:label ?evolLabel .
+        ?evol wdt:P1685 ?evolNumber .
+
+        # Filtrer les labels en français
+        FILTER((LANG(?pokemonLabel) = "fr"))
+        FILTER((LANG(?evolLabel) = "fr"))
+        FILTER(?pokedexNumber = '${formattedId}')
+    }
+    GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber
+    ORDER BY xsd:integer(?pokedexNumber)
+    `;
+}
+
+function generationsRequest(id) {
+    // Formater l'ID pour qu'il ait toujours 3 chiffres avec des zéros devant
+    const formattedId = id.toString().padStart(3, '0');
+
+    return `SELECT DISTINCT ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel WHERE {
+  
+        # Identifier les Pokémon
+        ?pokemon wdt:P31/wdt:P279* wd:Q3966183 .  # Classe Pokémon
+
+        # Récupérer le numéro de Pokédex
+        ?pokemon wdt:P1685 ?pokedexNumber .
+
+        # Identifier la génération avec P4584
+        ?pokemon wdt:P4584 ?generation .
+        ?generation rdfs:label ?generationLabel .
+
+        # Récupérer les labels du Pokémon
+        ?pokemon rdfs:label ?pokemonLabel .
+
+
+        # Filtrer les labels en français
+        FILTER((LANG(?pokemonLabel) = "fr"))
+        FILTER((LANG(?generationLabel) = "fr"))
+        FILTER(?pokedexNumber = '${formattedId}')
+    }
+    GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel
+    ORDER BY xsd:integer(?pokedexNumber)
+    `;   
+
+}
+      
 function pokemonsRequestTriplyDB() {
-    return `PREFIX poke: <https://triplydb.com/academy/pokemon/vocab/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb (GROUP_CONCAT(?typeLabel; separator=', ') AS ?types) WHERE {?pokemon poke:name ?name; poke:description ?description; poke:type ?type; poke:species ?species; poke:baseHP ?baseHP; poke:baseAttack ?baseAttack; poke:baseDefense ?baseDefense; poke:baseSpAtk ?baseSpAtk; poke:baseSpDef ?baseSpDef; poke:baseSpeed ?baseSpeed; poke:length ?length; poke:weight ?weight; poke:nationalNumber ?nb . ?species rdfs:label ?speciesLabel . ?type rdfs:label ?typeLabel FILTER(lang(?description) = 'fr-fr' && lang(?name) = 'fr-fr')} GROUP BY ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb ORDER BY ?nb`;
+  return `
+    PREFIX poke: <https://triplydb.com/academy/pokemon/vocab/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    SELECT ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb 
+           (GROUP_CONCAT(?typeLabel; separator=', ') AS ?types)
+    WHERE {
+      ?pokemon poke:name ?name;
+               poke:description ?description;
+               poke:type ?type;
+               poke:species ?species;
+               poke:baseHP ?baseHP;
+               poke:baseAttack ?baseAttack;
+               poke:baseDefense ?baseDefense;
+               poke:baseSpAtk ?baseSpAtk;
+               poke:baseSpDef ?baseSpDef;
+               poke:baseSpeed ?baseSpeed;
+               poke:length ?length;
+               poke:weight ?weight;
+               poke:nationalNumber ?nb.
+
+      ?species rdfs:label ?speciesLabel.
+      ?type rdfs:label ?typeLabel.
+
+      FILTER(lang(?description) = 'fr-fr' && lang(?name) = 'fr-fr')
+    }
+    GROUP BY ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb
+    ORDER BY ?nb
+  `;
+}
+
+function pokemonRequestTriplyDB(id) {
+  return `
+    PREFIX poke: <https://triplydb.com/academy/pokemon/vocab/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    SELECT ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb 
+           (GROUP_CONCAT(?typeLabel; separator=', ') AS ?types)
+    WHERE {
+      ?pokemon poke:name ?name;
+               poke:description ?description;
+               poke:type ?type;
+               poke:species ?species;
+               poke:baseHP ?baseHP;
+               poke:baseAttack ?baseAttack;
+               poke:baseDefense ?baseDefense;
+               poke:baseSpAtk ?baseSpAtk;
+               poke:baseSpDef ?baseSpDef;
+               poke:baseSpeed ?baseSpeed;
+               poke:length ?length;
+               poke:weight ?weight;
+               poke:nationalNumber ?nb.
+
+      ?species rdfs:label ?speciesLabel.
+      ?type rdfs:label ?typeLabel.
+
+      FILTER(lang(?description) = 'fr-fr' && lang(?name) = 'fr-fr')
+      FILTER(?nb = ${id})
+    }
+    GROUP BY ?name ?description ?speciesLabel ?baseHP ?baseAttack ?baseDefense ?baseSpAtk ?baseSpDef ?baseSpeed ?length ?weight ?nb
+    ORDER BY ?nb
+  `;
 }
 
 function moviesRequestWikiData() {
@@ -101,8 +224,8 @@ ORDER BY ?earliestReleaseDate
 `;
 }
 
-function gamesRequestWikiData(){
-    return `SELECT DISTINCT ?videogame ?videogameLabel ?releaseDate ?directorLabel ?locationLabel 
+function gamesRequestWikiData() {
+  return `SELECT DISTINCT ?videogame ?videogameLabel ?releaseDate ?directorLabel ?locationLabel 
     WHERE {
       ?videogame wdt:P31 wd:Q7889;
                  wdt:P179 wd:Q24558579.
