@@ -25,6 +25,41 @@ async function fetchPokemon(id) {
     const response2 = await fetch(evolutionUrl).then(response => response.json());
     const evolutions = response2.results.bindings;
 
+    // Check si le pokemon a des évolutions
+    if (evolutions.length === 0) {
+        return {
+            id: id,
+            name: pokemon[0].name,
+            description: pokemon[0].description,
+            species: pokemon[0].speciesLabel,
+            abilities: pokemon[0].abilities,
+            height: pokemon[0].length,
+            weight: pokemon[0].weight,
+            baseHP: pokemon[0].baseHP,
+            baseAttack: pokemon[0].baseAttack,
+            baseDefense: pokemon[0].baseDefense,
+            baseSpAtk: pokemon[0].baseSpAtk,
+            baseSpDef: pokemon[0].baseSpDef,
+            baseSpeed: pokemon[0].baseSpeed,
+            types: pokemon[0].types.split(', '),
+            generation: generation[0].generationLabel.value.split(' ')
+                .slice(0, 2) // Prendre seulement les deux premiers mots
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
+                .join(' '), // Rejoindre les mots
+            evolutions: {
+                base: {
+                    name: pokemon[0].name.charAt(0).toUpperCase() + pokemon[0].name.slice(1).toLowerCase(),
+                    number: parseInt(id)
+                },
+                current: {
+                    name: pokemon[0].name.charAt(0).toUpperCase() + pokemon[0].name.slice(1).toLowerCase(),
+                    number: parseInt(id)
+                },
+            },
+            games: games,
+        };
+    }
+
     // Extraire les noms d'évolution et les numéros d'évolution
     const evolLabels = evolutions[0].evolLabels.value.split(', ');
     const evolNumbers = evolutions[0].evolNumbers.value.split(', ');
