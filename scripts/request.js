@@ -32,7 +32,7 @@ function pokemonsRequestWikiData() {
 
     }
     GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel
-    ORDER BY ?xsd:integer(pokedexNumber)
+    ORDER BY xsd:integer(?pokedexNumber)
     `;
 }
 
@@ -87,7 +87,7 @@ function generationsRequest(id) {
         FILTER(LANG(?pokemonLabel) = "fr")
         FILTER(LANG(?generationLabel) = "fr")
     }
-    GROUP BY ?pokemon ?pokemonLabel  ?generationLabel
+    GROUP BY ?pokemon ?pokemonLabel ?generationLabel
     `;
 }
 
@@ -234,7 +234,7 @@ WHERE {
   FILTER(?movie = ${id})
 
   SERVICE wikibase:label { 
-    bd:serviceParam wikibase:LANGuage "[AUTO_LANGUAGE],en,fr". 
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,fr". 
   }
 }
 GROUP BY 
@@ -297,7 +297,7 @@ function gamesRequestWikiData() {
       OPTIONAL { ?videogame wdt:P577 ?releaseDate. }
       OPTIONAL { ?videogame wdt:P57 ?director. }
       OPTIONAL { ?videogame wdt:P840 ?location. }
-      SERVICE wikibase:label { bd:serviceParam wikibase:LANGuage "[AUTO_LANGUAGE],fr,en". }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". }
     }
     ORDER BY ?releaseDate
     `
