@@ -1,0 +1,31 @@
+.game-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .game-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+  }
+  
+  .card-header {
+    font-weight: bold;
+  }
+  
+  .card-middle {
+    font-weight: bold;
+  }
+  
+  .card-middle img.game-image {
+    width: 250px;
+    height: 200px;
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+  }
+  
+  .card-body {
+    font-size: 0.9rem;
+  }
+  
+  #games-container {
+    gap: 20px;
+  }
+  

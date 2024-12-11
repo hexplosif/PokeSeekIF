@@ -290,18 +290,21 @@ ORDER BY ?earliestReleaseDate
 }
 
 function gamesRequestWikiData() {
-  return `SELECT DISTINCT ?videogame ?videogameLabel ?releaseDate ?directorLabel ?locationLabel 
+  return `
+    SELECT DISTINCT ?videogame ?videogameLabel ?releaseDate ?directorLabel ?locationLabel ?logoImage
     WHERE {
       ?videogame wdt:P31 wd:Q7889;
                  wdt:P179 wd:Q24558579.
       OPTIONAL { ?videogame wdt:P577 ?releaseDate. }
       OPTIONAL { ?videogame wdt:P57 ?director. }
       OPTIONAL { ?videogame wdt:P840 ?location. }
+      OPTIONAL { ?videogame wdt:P154 ?logoImage. } # Retrieve the logo image property
       SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". }
     }
     ORDER BY ?releaseDate
-    `
+  `;
 }
+
 /* function gamesRequestWikiData(){
     return `SELECT ?videogame ?videogameLabel 
        (GROUP_CONCAT(DISTINCT ?directorLabel; separator=", ") AS ?directors)
