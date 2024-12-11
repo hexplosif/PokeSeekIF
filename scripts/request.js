@@ -188,7 +188,7 @@ function pokemonRequestTriplyDB(id) {
   `;
 }
 
-function moviesRequestWikiData() {
+function moviesRequestSpecificWikiData(id) {
   return `SELECT DISTINCT 
   ?movie 
   ?movieLabel 
