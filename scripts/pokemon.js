@@ -25,6 +25,41 @@ async function fetchPokemon(id) {
     const response2 = await fetch(evolutionUrl).then(response => response.json());
     const evolutions = response2.results.bindings;
 
+    let currentEvolution = {
+        name: pokemon[0].pokemonLabel.value,
+        number: parseInt(id)
+    };
+    let base = {
+        name: pokemon[0].pokemonLabel.value,
+        number: parseInt(id)
+    }
+    let niveau1 = undefined;
+    let niveau2 = undefined;
+
+    // Check si le pokemon a des évolutions
+    if (evolutions.length > 0) {
+        // Extraire les noms d'évolution et les numéros d'évolution
+        const evolLabels = evolutions[0].evolLabels.value.split(', ');
+        const evolNumbers = evolutions[0].evolNumbers.value.split(', ');
+
+        // Créer un tableau des évolutions (label et numéro) et trier par numéro
+        const evolutionsWithNumbers = evolLabels.map((label, index) => ({
+            name: label,
+            number: parseInt(evolNumbers[index])
+        }));
+
+        // Trier les évolutions par numéro
+        evolutionsWithNumbers.sort((a, b) => (a.number) - (b.number));
+
+        // Trouver l'évolution du Pokémon actuel (ID)
+
+        currentEvolution = evolutionsWithNumbers.find(evolution => evolution.number === parseInt(id));
+        
+        base = evolutionsWithNumbers[0];
+        niveau1 = evolutionsWithNumbers[1];
+        niveau2 = evolutionsWithNumbers[2];
+    }
+
     // SI le Pokémon n'existe pas dans TriplyDB, on utilise l'API de PokeAPI
 
     if (stats.length === 0) {
@@ -47,71 +82,14 @@ async function fetchPokemon(id) {
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
                 .join(' '), // Rejoindre les mots
             evolutions: {
-                base: {
-                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
-                    number: parseInt(id)
-                },
-                current: {
-                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
-                    number: parseInt(id)
-                },
+                base: base,
+                niveau1: niveau1,
+                niveau2: niveau2,
+                current: currentEvolution,
             },
             games: games,
         };
     }
-
-    // Check si le pokemon a des évolutions
-    if (evolutions.length === 0) {
-        return {
-            id: id,
-            name: pokemon[0].pokemonLabel.value,
-            description: stats[0].description,
-            height: stats[0].length,
-            weight: stats[0].weight,
-            baseHP: stats[0].baseHP,
-            baseAttack: stats[0].baseAttack,
-            baseDefense: stats[0].baseDefense,
-            baseSpAtk: stats[0].baseSpAtk,
-            baseSpDef: stats[0].baseSpDef,
-            baseSpeed: stats[0].baseSpeed,
-            types: pokemon[0].types.value.split(', '),
-            generation: pokemon[0].generationLabel.value.split(' ')
-                .slice(0, 2) // Prendre seulement les deux premiers mots
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
-                .join(' '), // Rejoindre les mots
-            evolutions: {
-                base: {
-                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
-                    number: parseInt(id)
-                },
-                current: {
-                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
-                    number: parseInt(id)
-                },
-            },
-            games: games,
-        };
-    }
-    // Extraire les noms d'évolution et les numéros d'évolution
-    const evolLabels = evolutions[0].evolLabels.value.split(', ');
-    const evolNumbers = evolutions[0].evolNumbers.value.split(', ');
-
-    // Créer un tableau des évolutions (label et numéro) et trier par numéro
-    const evolutionsWithNumbers = evolLabels.map((label, index) => ({
-        name: label,
-        number: parseInt(evolNumbers[index])
-    }));
-
-    // Trier les évolutions par numéro
-    evolutionsWithNumbers.sort((a, b) => (a.number) - (b.number));
-
-    // Trouver l'évolution du Pokémon actuel (ID)
-
-    const currentEvolution = evolutionsWithNumbers.find(evolution => evolution.number === parseInt(id));
-    
-    let base = evolutionsWithNumbers[0];
-    let niveau1 = evolutionsWithNumbers[1];
-    let niveau2 = evolutionsWithNumbers[2];
 
     // Organiser les données pour l'affichage
     return {
@@ -218,7 +196,7 @@ function renderPokemon(pokemon) {
         const div = document.createElement('div');
         //if two type class = two-types, if not one-type with the type like before
         div.className = pokemon.types.length === 2 ? 'two-types' : 'one-type';
-        div.className += ' ' + type.split(' ')[3].toLowerCase().replace("é","e");
+        div.className += ' ' + type.split(' ')[3].toLowerCase().replace("é","e").replace("è","e");
         div.textContent = type.split(' ')[3].charAt(0).toUpperCase() + type.split(' ')[3].slice(1).toLowerCase();
         types.appendChild(div);
     });

@@ -29,7 +29,7 @@ function renderPokemons(pokemons) {
                 <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${parseInt(pokemon.id)}.png" alt="${pokemon.name}" class="card-img-top">
             </div>
             <div class="card-type">
-                ${pokemon.types.map(type => `<div class="${pokemon.types.length === 2 ? 'two-types' : 'one-type'} ${type.split(' ')[3].toLowerCase().replace("é","e")}">
+                ${pokemon.types.map(type => `<div class="${pokemon.types.length === 2 ? 'two-types' : 'one-type'} ${type.split(' ')[3].toLowerCase().replace("é","e").replace("è","e")}">
                     ${type.split(' ')[3].charAt(0).toUpperCase() + type.split(' ')[3].slice(1).toLowerCase()}
                 </div>`).join('')}
             </div>
