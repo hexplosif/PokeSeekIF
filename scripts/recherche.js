@@ -1,10 +1,10 @@
-const SEARCH_TYPES = ['pokemon', 'game', 'movie']
-
-const searchAutocomplete = document.getElementById('search-autocomplete')
-const searchResultsContainer = document.getElementById('searchResultsContainer')
-const searchButton = document.getElementById('searchButton')
-const search = document.getElementById('search')
-let meilleurResultat = null
+const searchAutocomplete = document.getElementById('search-autocomplete');
+const searchResultsContainer = document.getElementById('searchResultsContainer');
+const searchButton = document.getElementById('searchButton');
+const search = document.getElementById('search');
+let meilleurResultat = null;
+let controller = null;
+let currentQuery = null;
 
 function goToFirstResult() {
     if (meilleurResultat) {
@@ -12,39 +12,79 @@ function goToFirstResult() {
     }
 }
 
+
 async function submitPokemon(q) {
+    currentQuery = q; // Stocke la requête actuelle
+    controller = new AbortController();
+    const signal = controller.signal;
+    
     const searchPokemonQuery = pokemonSearchRequest(q, 5);
     const url = getQueryUrl(WIKIDATA_API, searchPokemonQuery);
-    const response = await fetch(url).then(response => response.json());
-    const pokemons = response.results.bindings.map(pokemon => ({
-        id: parseInt(pokemon.pokedexNumber.value),
-        name: pokemon.pokemonLabel.value,
-    }));
-    renderResults(pokemons, 'pokemon')
-    meilleurResultat = pokemons[0]
-    searchAutocomplete.innerText = `${search.value} — ${pokemons[0].name}`
+    
+    try {
+        const response = await fetch(url, { signal }).then(response => response.json());
+        if (currentQuery !== q) return; // Ignore les résultats si l'input a changé
+        const pokemons = response.results.bindings.map(pokemon => ({
+            id: parseInt(pokemon.pokedexNumber.value),
+            name: pokemon.pokemonLabel.value,
+        }));
+
+        renderResults(pokemons, 'pokemon');
+        meilleurResultat = pokemons[0];
+        searchAutocomplete.innerText = `${search.value} — ${pokemons[0].name}`;
+    } catch (error) {
+        if (error.name !== 'AbortError') {
+            console.error('Erreur lors de la récupération des Pokémon:', error);
+        }
+    }
 }
 
 async function submitGames(q) {
+    currentQuery = q; // Stocke la requête actuelle
+    controller = new AbortController();
+    const signal = controller.signal;
+
     const searchGamesQuery = gameSearchRequest(q, 5);
     const url = getQueryUrl(WIKIDATA_API, searchGamesQuery);
-    const response = await fetch(url).then(response => response.json());
-    const games = response.results.bindings.map(game => ({
-        id: game.videogame.value,
-        name: game.videogameLabel.value,
-    }));
-    renderResults(games, 'game')
+
+    try {
+        const response = await fetch(url, { signal }).then(response => response.json());
+        if (currentQuery !== q) return; // Ignore les résultats si l'input a changé
+        const games = response.results.bindings.map(game => ({
+            id: game.videogame.value,
+            name: game.videogameLabel.value,
+        }));
+
+        renderResults(games, 'game');
+    } catch (error) {
+        if (error.name !== 'AbortError') {
+            console.error('Erreur lors de la récupération des jeux:', error);
+        }
+    }
 }
 
 async function submitMovies(q) {
+    currentQuery = q; // Stocke la requête actuelle
+    controller = new AbortController();
+    const signal = controller.signal;
+
     const searchMoviesQuery = movieSearchRequest(q, 5);
     const url = getQueryUrl(WIKIDATA_API, searchMoviesQuery);
-    const response = await fetch(url).then(response => response.json());
-    const movies = response.results.bindings.map(movie => ({
-        id: movie.movie.value,
-        name: movie.movieLabel.value,
-    }));
-    renderResults(movies, 'movie')
+
+    try {
+        const response = await fetch(url, { signal }).then(response => response.json());
+        if (currentQuery !== q) return; // Ignore les résultats si l'input a changé
+        const movies = response.results.bindings.map(movie => ({
+            id: movie.movie.value,
+            name: movie.movieLabel.value,
+        }));
+
+        renderResults(movies, 'movie');
+    } catch (error) {
+        if (error.name !== 'AbortError') {
+            console.error('Erreur lors de la récupération des films:', error);
+        }
+    }
 }
 
 function renderResults(results, type) {
@@ -87,6 +127,9 @@ function renderResults(results, type) {
 function resetResults() {
     searchResultsContainer.innerHTML = ''
     meilleurResultat = null
+    if (controller) {
+        controller.abort()
+    }
 }
 
 function main() {
