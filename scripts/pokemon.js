@@ -1,11 +1,6 @@
 // Get pokemon data from TriplyDB
 async function fetchPokemon(id) {
 
-    const generationQuery = generationsRequest(id);
-    const generationUrl = getQueryUrl(WIKIDATA_API, generationQuery);
-    const response = await fetch(generationUrl).then(response => response.json());
-    const generation = response.results.bindings;
-
     const gamesQuery = pokemonGamesRequest(id);
     const gamesUrl = getQueryUrl(WIKIDATA_API, gamesQuery);
     const response1 = await fetch(gamesUrl).then(response => response.json());
@@ -16,44 +11,48 @@ async function fetchPokemon(id) {
         };
     });
 
-    const query = pokemonRequestTriplyDB(id);
-    const url = getQueryUrl(TRIPLY_DB_API, query);
-    const pokemon = await fetch(url).then(response => response.json());
-    
+    const statQuery = pokemonRequestTriplyDB(id);
+    const statUrl = getQueryUrl(TRIPLY_DB_API, statQuery);
+    const stats = await fetch(statUrl).then(response => response.json());
 
-    const evolutionQuery = evolutionsRequest(id);
+    const pokemonQuery = pokemonRequestWikiData(id);
+    const pokemonUrl = getQueryUrl(WIKIDATA_API, pokemonQuery);
+    const response3 = await fetch(pokemonUrl).then(response => response.json());
+    const pokemon = response3.results.bindings;    
+
+    const evolutionQuery = pokemonEvolutionsRequest(id);
     const evolutionUrl = getQueryUrl(WIKIDATA_API, evolutionQuery);
     const response2 = await fetch(evolutionUrl).then(response => response.json());
     const evolutions = response2.results.bindings;
 
-    // Check si le pokemon a des évolutions
-    if (evolutions.length === 0) {
+    // SI le Pokémon n'existe pas dans TriplyDB, on utilise l'API de PokeAPI
+
+    if (stats.length === 0) {
+        const statsAPI = await fetchStatsViaPokeAPI(id);
         return {
             id: id,
-            name: pokemon[0].name,
-            description: pokemon[0].description,
-            species: pokemon[0].speciesLabel,
-            abilities: pokemon[0].abilities,
-            height: pokemon[0].length,
-            weight: pokemon[0].weight,
-            baseHP: pokemon[0].baseHP,
-            baseAttack: pokemon[0].baseAttack,
-            baseDefense: pokemon[0].baseDefense,
-            baseSpAtk: pokemon[0].baseSpAtk,
-            baseSpDef: pokemon[0].baseSpDef,
-            baseSpeed: pokemon[0].baseSpeed,
-            types: pokemon[0].types.split(', '),
-            generation: generation[0].generationLabel.value.split(' ')
+            name: pokemon[0].pokemonLabel.value,
+            description: "La description de ce Pokémon n'est pas disponible.",
+            height: statsAPI.height,
+            weight: statsAPI.weight,
+            baseHP: statsAPI.baseHP,
+            baseAttack: statsAPI.baseAttack,
+            baseDefense: statsAPI.baseDefense,
+            baseSpAtk: statsAPI.baseSpAtk,
+            baseSpDef: statsAPI.baseSpDef,
+            baseSpeed: statsAPI.baseSpeed,
+            types: pokemon[0].types.value.split(', '),
+            generation: pokemon[0].generationLabel.value.split(' ')
                 .slice(0, 2) // Prendre seulement les deux premiers mots
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
                 .join(' '), // Rejoindre les mots
             evolutions: {
                 base: {
-                    name: pokemon[0].name.charAt(0).toUpperCase() + pokemon[0].name.slice(1).toLowerCase(),
+                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
                     number: parseInt(id)
                 },
                 current: {
-                    name: pokemon[0].name.charAt(0).toUpperCase() + pokemon[0].name.slice(1).toLowerCase(),
+                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
                     number: parseInt(id)
                 },
             },
@@ -61,6 +60,38 @@ async function fetchPokemon(id) {
         };
     }
 
+    // Check si le pokemon a des évolutions
+    if (evolutions.length === 0) {
+        return {
+            id: id,
+            name: pokemon[0].pokemonLabel.value,
+            description: stats[0].description,
+            height: stats[0].length,
+            weight: stats[0].weight,
+            baseHP: stats[0].baseHP,
+            baseAttack: stats[0].baseAttack,
+            baseDefense: stats[0].baseDefense,
+            baseSpAtk: stats[0].baseSpAtk,
+            baseSpDef: stats[0].baseSpDef,
+            baseSpeed: stats[0].baseSpeed,
+            types: pokemon[0].types.value.split(', '),
+            generation: pokemon[0].generationLabel.value.split(' ')
+                .slice(0, 2) // Prendre seulement les deux premiers mots
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
+                .join(' '), // Rejoindre les mots
+            evolutions: {
+                base: {
+                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
+                    number: parseInt(id)
+                },
+                current: {
+                    name: pokemon[0].pokemonLabel.value.charAt(0).toUpperCase() + pokemon[0].pokemonLabel.value.slice(1).toLowerCase(),
+                    number: parseInt(id)
+                },
+            },
+            games: games,
+        };
+    }
     // Extraire les noms d'évolution et les numéros d'évolution
     const evolLabels = evolutions[0].evolLabels.value.split(', ');
     const evolNumbers = evolutions[0].evolNumbers.value.split(', ');
@@ -85,20 +116,18 @@ async function fetchPokemon(id) {
     // Organiser les données pour l'affichage
     return {
         id: id,
-        name: pokemon[0].name,
-        description: pokemon[0].description,
-        species: pokemon[0].speciesLabel,
-        abilities: pokemon[0].abilities,
-        height: pokemon[0].length,
-        weight: pokemon[0].weight,
-        baseHP: pokemon[0].baseHP,
-        baseAttack: pokemon[0].baseAttack,
-        baseDefense: pokemon[0].baseDefense,
-        baseSpAtk: pokemon[0].baseSpAtk,
-        baseSpDef: pokemon[0].baseSpDef,
-        baseSpeed: pokemon[0].baseSpeed,
-        types: pokemon[0].types.split(', '),
-        generation: generation[0].generationLabel.value.split(' ')
+        name: pokemon[0].pokemonLabel.value,
+        description: stats[0].description,
+        height: stats[0].length,
+        weight: stats[0].weight,
+        baseHP: stats[0].baseHP,
+        baseAttack: stats[0].baseAttack,
+        baseDefense: stats[0].baseDefense,
+        baseSpAtk: stats[0].baseSpAtk,
+        baseSpDef: stats[0].baseSpDef,
+        baseSpeed: stats[0].baseSpeed,
+        types: pokemon[0].types.value.split(', '),
+        generation: pokemon[0].generationLabel.value.split(' ')
             .slice(0, 2) // Prendre seulement les deux premiers mots
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Mettre la première lettre en majuscule
             .join(' '), // Rejoindre les mots
@@ -110,6 +139,23 @@ async function fetchPokemon(id) {
         },
         games: games,
     };
+}
+
+function fetchStatsViaPokeAPI(id) {
+    return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            return {
+                height: data.height,
+                weight: data.weight,
+                baseHP: data.stats[0].base_stat,
+                baseAttack: data.stats[1].base_stat,
+                baseDefense: data.stats[2].base_stat,
+                baseSpAtk: data.stats[3].base_stat,
+                baseSpDef: data.stats[4].base_stat,
+                baseSpeed: data.stats[5].base_stat,
+            };
+        });
 }
 
 
@@ -172,8 +218,8 @@ function renderPokemon(pokemon) {
         const div = document.createElement('div');
         //if two type class = two-types, if not one-type with the type like before
         div.className = pokemon.types.length === 2 ? 'two-types' : 'one-type';
-        div.className += ' ' + type.toLowerCase();
-        div.textContent = type.split(' ')[0];
+        div.className += ' ' + type.split(' ')[3].toLowerCase().replace("é","e");
+        div.textContent = type.split(' ')[3].charAt(0).toUpperCase() + type.split(' ')[3].slice(1).toLowerCase();
         types.appendChild(div);
     });
 

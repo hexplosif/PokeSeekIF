@@ -1,24 +1,13 @@
 // Get all pokemons from Wikidata
 async function fetchPokemons() {
-    const query = pokemonsRequestTriplyDB();
-    const url = getQueryUrl(TRIPLY_DB_API, query);
+    const query = pokemonsRequestWikiData();
+    const url = getQueryUrl(WIKIDATA_API, query);
     const response = await fetch(url).then(response => response.json());
-    const pokemons = response.map(pokemon => ({
-        id: pokemon.nb,
-        name: pokemon.name,
-        description: pokemon.description,
-        species: pokemon.speciesLabel,
-        baseHP: pokemon.baseHP,
-        baseAttack: pokemon.baseAttack,
-        baseDefense: pokemon.baseDefense,
-        baseSpAtk: pokemon.baseSpAtk,
-        baseSpDef: pokemon.baseSpDef,
-        baseSpeed: pokemon.baseSpeed,
-        height: pokemon.length,
-        weight: pokemon.weight,
-        types: pokemon.types.split(', '),
+    return response.results.bindings.map(pokemon => ({
+        id: parseInt(pokemon.pokedexNumber.value),
+        name: pokemon.pokemonLabel.value,
+        types: pokemon.types.value.split(', '),
     }));
-    return pokemons;
 }
 
 // Render the pokemons in the pokedex
@@ -40,7 +29,9 @@ function renderPokemons(pokemons) {
                 <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${parseInt(pokemon.id)}.png" alt="${pokemon.name}" class="card-img-top">
             </div>
             <div class="card-type">
-                ${pokemon.types.map(type => `<div class="${pokemon.types.length === 2 ? 'two-types' : 'one-type'} ${type.toLowerCase()}">${type.split(' ')[0]}</div>`).join('')}
+                ${pokemon.types.map(type => `<div class="${pokemon.types.length === 2 ? 'two-types' : 'one-type'} ${type.split(' ')[3].toLowerCase().replace("é","e")}">
+                    ${type.split(' ')[3].charAt(0).toUpperCase() + type.split(' ')[3].slice(1).toLowerCase()}
+                </div>`).join('')}
             </div>
         `;
         pokedex.appendChild(card);
