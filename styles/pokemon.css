@@ -3,7 +3,8 @@
     flex-direction: column;
     align-items: start;
     justify-content: center;
-    width: 70%;
+    max-width: 70%;
+    min-width: 60%;
     height: 100%;
     margin: 1rem;
 }
@@ -53,7 +54,7 @@
 .left-container .caracteristics .caracteristic .label {
     font-size: 1rem;
     font-weight: 700;
-    width: 100px;
+    width: 6rem;
     text-align: right;
 }
 
@@ -70,7 +71,7 @@
 .left-container .caracteristics .caracteristic-bar .label {
     font-size: 1rem;
     font-weight: 700;
-    width: 100px;
+    width: 6rem;
     text-align: right;
 }
 
@@ -103,7 +104,7 @@
 .left-container .statistics .stat-bar .label {
     font-size: 1rem;
     font-weight: 700;
-    width: 100px;
+    width: 6rem;
     text-align: right;
 }
 
@@ -117,7 +118,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 30%;
+    min-width: 30%;
     height: 100%;
     margin: 1rem;
     border-radius: 1rem;
@@ -137,6 +138,7 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+    z-index: 1;
 }
 
 .right-container .types {
@@ -144,7 +146,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 50px;
+    height: 3rem;
     border-radius: 1rem;
     overflow: hidden;
 }
@@ -170,7 +172,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 50px;
+    height: 3rem;
     border-radius: 1rem;
     overflow: hidden;
 }
@@ -186,6 +188,7 @@
     justify-content: center;
     width: 100%;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 
@@ -197,6 +200,7 @@
     text-decoration: none;
     color: #fff;
     padding: 1rem;
+    width: 6rem;
 }
 
 .right-container .evolutions .actual {
@@ -210,8 +214,7 @@
 }
 
 .right-container .evolutions .evolution .evolution-pokemon {
-    width: 75px;
-    height: 75px;
+    width: 100%;
     object-fit: contain;
 }
 
@@ -228,7 +231,7 @@
     margin-top: 1rem;
 }
 
-.games .section-title {
+.games .games-title {
     font-size: 2rem;
     font-weight: 700;
     margin-top: 1rem;

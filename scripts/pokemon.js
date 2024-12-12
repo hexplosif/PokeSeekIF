@@ -269,6 +269,9 @@ function renderPokemon(pokemon) {
 
     const games = document.querySelector('.games-container');
     games.innerHTML = '';
+    if (pokemon.games.length === 0) {
+        document.querySelector('.games-title').style.display = 'none';
+    }
     pokemon.games.forEach(game => {
         const gameElement = document.createElement('a');
         gameElement.className = 'game';
