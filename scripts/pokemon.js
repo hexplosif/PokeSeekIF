@@ -198,7 +198,7 @@ function renderPokemon(pokemon) {
         const div = document.createElement('div');
         console.log(type);
         //if two type class = two-types, if not one-type with the type like before
-        div.className = pokemon.types.length === 2 ? 'two-types' : 'one-type';
+        div.className = pokemon.types.find(type => type.split(' ')[0] === 'Pokémon').length === 2 ? 'two-types' : 'one-type';
         if (type.split(' ')[1] === 'légendaire') {
             document.querySelector('.legendary-tag').style.display = 'block';
         } else if (type.split(' ')[1] === 'fabuleux') {
