@@ -17,7 +17,7 @@ const MAX_SP_DEF = 230
 const MAX_SPEED = 200
 const MAX_TOTAL = 780
 const MAX_HEIGHT = 3
-const MAX_WEIGHT = 100
+const MAX_WEIGHT = 150
 
 // Functions
 function getQueryUrl(api, query) {
@@ -27,11 +27,15 @@ function getQueryUrl(api, query) {
 async function getSpecificMoviePosterURLFromTMDb(tmdbID) {
   const tmdbUrl = `${TMDb_BASE_URL}${tmdbID}?api_key=${API_KEY}`;
   try {
-      const response = await fetch(tmdbUrl);
-      const data = await response.json();
-      return data.poster_path ? `${TMDb_IMAGE_BASE_URL}${data.poster_path}` : "https://via.placeholder.com/200x300"; // Fallback image
+    const response = await fetch(tmdbUrl);
+    const data = await response.json();
+    return data.poster_path ? `${TMDb_IMAGE_BASE_URL}${data.poster_path}` : "https://via.placeholder.com/200x300"; // Fallback image
   } catch (error) {
-      console.error("Error fetching movie data from TMDb:", error);
-      return "https://via.placeholder.com/200x300"; // Fallback image
+    console.error("Error fetching movie data from TMDb:", error);
+    return "https://via.placeholder.com/200x300"; // Fallback image
   }
+}
+
+function extractIdFromWikidataUrl(url) {
+  return url?.match(/entity\/(Q\d+)$/)?.[1];
 }

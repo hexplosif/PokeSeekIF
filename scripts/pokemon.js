@@ -1,8 +1,5 @@
 // Get pokemon data from TriplyDB
 async function fetchPokemon(id) {
-    const query = pokemonRequestTriplyDB(id);
-    const url = getQueryUrl(TRIPLY_DB_API, query);
-    const pokemon = await fetch(url).then(response => response.json());
 
     const generationQuery = generationsRequest(id);
     const generationUrl = getQueryUrl(WIKIDATA_API, generationQuery);
@@ -18,6 +15,10 @@ async function fetchPokemon(id) {
             publicationDate: game.publicationDate.value.split('-')[0]
         };
     });
+
+    const query = pokemonRequestTriplyDB(id);
+    const url = getQueryUrl(TRIPLY_DB_API, query);
+    const pokemon = await fetch(url).then(response => response.json());
     
 
     const evolutionQuery = evolutionsRequest(id);

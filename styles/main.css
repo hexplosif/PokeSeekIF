@@ -18,3 +18,20 @@ input[type="search"] {
 hr {
     width: 100%;
 }
+
+#secondarySearchForm {
+    position: relative;
+}
+
+#secondary-search-autocomplete {
+    position: absolute;
+    top: 0;
+    opacity: 0.2;
+    overflow: hidden;
+    pointer-events: none;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.8rem;
+}

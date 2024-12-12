@@ -24,11 +24,13 @@ async function fetchSPARQLGamesData() {
 
 
   async function renderGames(games) {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
     const gamesContainer = document.getElementById("games-container");
     gamesContainer.innerHTML = '';
 
     for (const game of games) {
-        const card = document.createElement('div');
+        const card = document.createElement('a');
         card.className = "game-card border border-2 border-dark rounded-3 overflow-hidden shadow-lg text-white m-3";
         card.style.flex = "1 1 calc(25% - 30px)";
         card.innerHTML = `
@@ -36,14 +38,17 @@ async function fetchSPARQLGamesData() {
                 <div class="name">${game.name}</div>
             </div>
             <div class="card-middle">
-                ${game.logoImage ? `<img src="${game.logoImage}" alt="${game.name} Logo">` : '<div class="placeholder">No Image Available</div>'}
+                ${game.logoImage ? `<img src="${game.logoImage}" alt="${game.name}" class="game-image">` : '<img src="img/loading.gif" alt="Loading..." class="game-image">'}
             </div>
+            <!-- A mettre dans le page de détail
             <div class="card-body bg-danger text-center p-2">
                 <div>Release Date: ${game.releaseDate !== "Unknown" ? new Date(game.releaseDate).toLocaleDateString() : "Unknown"}</div>
                 <div>Director: ${game.director}</div>
                 <div>Location: ${game.location}</div>
             </div>
+            -->
         `;
+        card.href = "game.html?id=" + game.id.substring(31);
         gamesContainer.appendChild(card);
     }
 }

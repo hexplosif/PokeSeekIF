@@ -41,11 +41,11 @@
                         <a class="nav-link" href="movies.html">Movies</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Pokemon, game, movie..."
-                        aria-label="Search">
-                    <button class="btn btn-outline-light" type="submit">Search</button>
-                </form>
+                <div class="d-flex" role="search" id="secondarySearchForm">
+                    <div id="secondary-search-autocomplete"></div>
+                    <input id="secondary-search" class="form-control me-2" type="search" placeholder="Search a Pokémon..." aria-label="Search">
+                    <button id="secondary-search-button" class="btn btn-outline-light" type="submit">Search</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -131,7 +131,7 @@
 
         </div>
 
-        <div class="right-container">
+        <div class="right-container bg-dark-subtle">
             <div class="info">
                 <div class="poster">
                 </div>
@@ -145,6 +145,7 @@
         <script src="scripts/utils.js"></script>
         <script src="scripts/request.js"></script>
         <script src="scripts/movie.js"></script>
+        <script src="scripts/recherche-secondaire.js"></script>
 
 </body>
 

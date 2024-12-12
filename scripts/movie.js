@@ -97,7 +97,7 @@ async function renderMovie(movie) {
     const poster_fetched = document.createElement("div");
     poster_fetched.innerHTML = `
       <div>
-          <img src="${posterUrl}" alt="${movie.name} Poster">
+          <img src="${posterUrl}" alt="${movie.name} Poster" class="poster">
       </div>
     `;
     // Add poster to the container

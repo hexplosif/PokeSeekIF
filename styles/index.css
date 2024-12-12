@@ -1,1 +1,67 @@
-/* on a utilisé des classes bootstrap */
+#searchForm {
+    position: relative;
+}
+
+#search-autocomplete {
+    position: absolute;
+    top: 0;
+    opacity: 0.2;
+    overflow: hidden;
+    pointer-events: none;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.8rem;
+}
+
+#searchResultsContainer .recherche-categorie {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+    border-radius: 0.5rem;
+    margin: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+#searchResultsContainer .recherche-categorie h2 {
+    margin: 0;
+    width: 100%;
+    height: 50px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #444
+}
+
+#searchResultsContainer .recherche-categorie ul {
+    list-style: none;
+    width: 100%;
+    height: 250px;
+    padding: 1rem;
+    margin: 0;
+    background-color: #222;
+}
+
+#searchResultsContainer .recherche-categorie ul li {
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    -webkit-border-radius: 0.5rem;
+    -moz-border-radius: 0.5rem;
+    -ms-border-radius: 0.5rem;
+    -o-border-radius: 0.5rem;
+}
+
+#searchResultsContainer .recherche-categorie ul li:hover {
+    background-color: #444;
+}
+
+#searchResultsContainer .recherche-categorie ul li a {
+    text-decoration: none;
+    color: #fff;
+}

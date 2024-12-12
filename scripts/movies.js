@@ -40,6 +40,8 @@ async function getMoviePosterURLFromTMDb(tmdbID) {
 
 // Render movies in the movies page
 async function renderMovies(movies) {
+  const loader = document.getElementById('loader');
+  loader.style.display = 'none';
   const moviesContainer = document.getElementById("movies-container");
 
   for (const movie of movies) {
@@ -48,7 +50,7 @@ async function renderMovies(movies) {
 
 
     // Hello Louis début de mon bazar dans ton code, attention le lutin est d'humeur farceur
-    
+
 
 
     // Create and populate the movie card
@@ -62,7 +64,7 @@ async function renderMovies(movies) {
       </div>
       
       <div class="card-body">
-          <img src="${posterUrl}" alt="${movie.name} Poster">
+          <img src="${posterUrl}" alt="${movie.name} Poster" class="movie-image">
       </div>
     `;
 

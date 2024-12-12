@@ -331,3 +331,84 @@ function gamesRequestWikiData() {
 
     `
 }*/
+
+
+function pokemonSearchRequest(search, n = 1) {
+  return `
+    SELECT DISTINCT ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel 
+      (GROUP_CONCAT(DISTINCT ?typeLabel; separator=", ") AS ?types) 
+      WHERE {
+  
+      # Identifier les Pokémon
+      ?pokemon wdt:P31/wdt:P279* wd:Q3966183 .  # Classe Pokémon
+
+      # Récupérer le numéro de Pokédex
+      ?pokemon wdt:P1685 ?pokedexNumber .
+
+      # Identifier la génération avec P4584
+      ?pokemon wdt:P4584 ?generation .
+      ?generation rdfs:label ?generationLabel .
+
+      # Identifier les types avec des références
+      ?pokemon p:P31 ?typeStatement .
+      ?typeStatement ps:P31 ?type ;
+                    prov:wasDerivedFrom ?reference .  # Vérifie la présence d'une référence
+
+      # Récupérer les labels en français, puis en anglais si non disponible
+      ?pokemon rdfs:label ?pokemonLabel .
+      ?type rdfs:label ?typeLabel .
+
+      # Filtrer pour récupérer uniquement le label en français, ou anglais si le français n'existe pas
+      FILTER((LANG(?pokemonLabel) = "fr"))
+      FILTER((LANG(?typeLabel) = "fr"))
+      FILTER((LANG(?generationLabel) = "fr"))
+      # search in the pokemon label not only in the beginning
+      FILTER(CONTAINS(LCASE(?pokemonLabel), LCASE("${search}")))
+    }
+    GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel
+    ORDER BY xsd:integer(?pokedexNumber)
+    LIMIT ${n}
+    `;
+}
+
+function movieSearchRequest(search, n = 1) {
+  return `SELECT DISTINCT 
+  ?movie 
+  ?movieLabel 
+WHERE {
+  # Find items that are instances of anime films or general films
+  ?movie wdt:P31 ?movieType;
+         wdt:P527* ?series. # Part of a series
+  
+  # Ensure the type is either anime film or general film
+  VALUES ?movieType { wd:Q20650540 wd:Q11424 } # Anime film or general film
+
+  # Ensure the series is related to Pokémon
+  ?series wdt:P179 wd:Q97138261. # "Pokémon" series
+  
+  ?movie rdfs:label ?movieLabel .
+  FILTER((LANG(?movieLabel) = "fr"))
+  
+  FILTER(CONTAINS(LCASE(?movieLabel), LCASE("${search}")))
+}
+GROUP BY 
+  ?movie
+  ?movieLabel
+LIMIT ${n}
+`;
+}
+
+function gameSearchRequest(search, n = 1) {
+  return `
+    SELECT ?videogame ?videogameLabel
+    WHERE {
+      ?videogame wdt:P31 wd:Q7889;
+                 wdt:P179 wd:Q24558579.
+      ?videogame rdfs:label ?videogameLabel .
+      FILTER((LANG(?videogameLabel) = "fr"))
+      FILTER(CONTAINS(LCASE(?videogameLabel), LCASE("${search}")))
+    }
+    ORDER BY ?releaseDate
+    LIMIT ${n}
+  `;
+}
