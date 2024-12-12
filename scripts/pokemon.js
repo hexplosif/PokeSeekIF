@@ -18,7 +18,9 @@ async function fetchPokemon(id) {
     const pokemonQuery = pokemonRequestWikiData(id);
     const pokemonUrl = getQueryUrl(WIKIDATA_API, pokemonQuery);
     const response3 = await fetch(pokemonUrl).then(response => response.json());
-    const pokemon = response3.results.bindings;    
+    const pokemon = response3.results.bindings;  
+    
+    console.log(response3);
 
     const evolutionQuery = pokemonEvolutionsRequest(id);
     const evolutionUrl = getQueryUrl(WIKIDATA_API, evolutionQuery);
@@ -194,11 +196,20 @@ function renderPokemon(pokemon) {
     types.innerHTML = '';
     pokemon.types.forEach(type => {
         const div = document.createElement('div');
+        console.log(type);
         //if two type class = two-types, if not one-type with the type like before
         div.className = pokemon.types.length === 2 ? 'two-types' : 'one-type';
-        div.className += ' ' + type.split(' ')[3].toLowerCase().replace("é","e").replace("è","e");
-        div.textContent = type.split(' ')[3].charAt(0).toUpperCase() + type.split(' ')[3].slice(1).toLowerCase();
-        types.appendChild(div);
+        if (type.split(' ')[1] === 'légendaire') {
+            document.querySelector('.legendary-tag').style.display = 'block';
+        } else if (type.split(' ')[1] === 'fabuleux') {
+            document.querySelector('.mythical-tag').style.display = 'block';
+        } else if (type.split(' ')[2] === 'départ') {
+            document.querySelector('.starter-tag').style.display = 'block';
+        } else if (type.split(' ')[0] === 'Pokémon') {
+            div.className += ' ' + type.split(' ')[3].toLowerCase().replace("é","e").replace("è","e");
+            div.textContent = type.split(' ')[3].charAt(0).toUpperCase() + type.split(' ')[3].slice(1).toLowerCase();
+            types.appendChild(div);
+        }
     });
 
     const generation = document.querySelector('.generation');

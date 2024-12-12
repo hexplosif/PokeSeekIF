@@ -58,8 +58,7 @@ function pokemonRequestWikiData(id) {
 
       # Identifier les types avec des références
       ?pokemon p:P31 ?typeStatement .
-      ?typeStatement ps:P31 ?type ;
-                    prov:wasDerivedFrom ?reference .  # Vérifie la présence d'une référence
+      ?typeStatement ps:P31 ?type .
 
       # Récupérer les labels en français, puis en anglais si non disponible
       ?pokemon rdfs:label ?pokemonLabel .
