@@ -339,8 +339,8 @@ function pokemonSearchRequest(search, n = 1) {
       FILTER((LANG(?pokemonLabel) = "fr"))
       FILTER((LANG(?typeLabel) = "fr"))
       FILTER((LANG(?generationLabel) = "fr"))
-      # search in the pokemon label not only in the beginning
-      FILTER(CONTAINS(LCASE(?pokemonLabel), LCASE("${search}")))
+      # search in the pokemon label in the beginning of the word
+      FILTER(STRSTARTS(LCASE(?pokemonLabel), LCASE("${search}")))
     }
     GROUP BY ?pokemon ?pokemonLabel ?pokedexNumber ?generationLabel
     ORDER BY xsd:integer(?pokedexNumber)
