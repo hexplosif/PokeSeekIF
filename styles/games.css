@@ -42,3 +42,15 @@
 #games-container {
     gap: 20px;
 }
+
+.no-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: #aaa;
+    font-size: 1rem;
+    text-align: center;
+    
+}

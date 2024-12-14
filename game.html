@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <link rel="stylesheet" type="text/css" href="styles/types.css">
+    <link rel="stylesheet" type="text/css" href="styles/game.css">
+    <link rel="icon" href="img/ZarbiQ.png">
+    <title>Zarb'IF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<!-- en tête -->
+
+<body class="d-flex h-100 text-center text-white bg-dark flex-column bg-dark min-vh-100">
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body fixed-top" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="img/ZarbiQ.png" alt="Logo" height="24" class="d-inline-block align-text-top">
+                Zarb'IF
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+                aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pokedex.html">Pokédex</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="games.html">Games</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="movies.html">Movies</a>
+                    </li>
+                </ul>
+                <div class="d-flex" role="search" id="secondarySearchForm">
+                    <div id="secondary-search-autocomplete"></div>
+                    <input id="secondary-search" class="form-control me-2" type="search" placeholder="Search a Pokémon..." aria-label="Search">
+                    <button id="secondary-search-button" class="btn btn-outline-light" type="submit">Search</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container d-flex justify-content-center pt-5 mt-5">
+
+        <div class="main-info">
+            <h1 class="name"></h1>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="container d-flex justify-content-center">
+        <div class="left-container">
+            <div class="info">
+                <div class="label">Release Date:</div>
+                <div class="releaseDate" style="text-align:left"></div>
+            </div>
+            <div class="info">
+                <div class="label">Director:</div>
+                <div class="director" style="text-align:left"></div>
+            </div>
+            <div class="info">
+                <div class="label">Composer:</div>
+                <div class="composer" style="text-align:left"></div>
+            </div>
+            <div class="info">
+                <div class="label">Producer:</div>
+                <div class="producer" style="text-align:left"></div>
+            </div>
+            <div class="info">
+                <div class="label">Platform:</div>
+                <div class="platform" style="text-align:left"></div>
+            </div>
+            <div class="info">
+                <div class="label">Genre:</div>
+                <div class="genre" style="text-align:left"></div>
+            </div>
+            <div class="info">
+                <div class="label">Mode:</div>
+                <div class="mode" style="text-align:left"></div>
+            </div>
+            <div class="info">
+                <div class="label">Engine:</div>
+                <div class="engine" style="text-align:left"></div>
+            </div>
+        </div>
+
+        <div class="right-container bg-dark-subtle">
+            <div class="info">
+                <div class="poster">
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+
+        <script src="scripts/utils.js"></script>
+        <script src="scripts/request.js"></script>
+        <script src="scripts/game.js"></script>
+        <script src="scripts/recherche-secondaire.js"></script>
+
+</body>
+
+</html>

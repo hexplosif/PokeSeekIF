@@ -268,46 +268,64 @@ ORDER BY ?earliestReleaseDate
 
 function gamesRequestWikiData() {
   return `
-    SELECT DISTINCT ?videogame ?videogameLabel ?releaseDate ?directorLabel ?locationLabel ?logoImage
+    SELECT DISTINCT ?videogame ?videogameLabel ?logoImage
     WHERE {
       ?videogame wdt:P31 wd:Q7889;
                  wdt:P179 wd:Q24558579.
-      OPTIONAL { ?videogame wdt:P577 ?releaseDate. }
-      OPTIONAL { ?videogame wdt:P57 ?director. }
-      OPTIONAL { ?videogame wdt:P840 ?location. }
       OPTIONAL { ?videogame wdt:P154 ?logoImage. } # Retrieve the logo image property
       SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". }
     }
-    ORDER BY ?releaseDate
+    ORDER BY ?videogame
   `;
 }
 
-/* function gamesRequestWikiData(){
-    return `SELECT ?videogame ?videogameLabel 
-       (GROUP_CONCAT(DISTINCT ?directorLabel; separator=", ") AS ?directors)
-       (GROUP_CONCAT(DISTINCT ?locationLabel; separator=", ") AS ?locations)
-       (MAX(SUBSTR(STR(?unformattedReleaseDate), 1, 10)) AS ?releaseDate)
-      WHERE {
-        ?videogame wdt:P31 wd:Q7889;
-                  wdt:P179 wd:Q24558579.
-        OPTIONAL { ?videogame wdt:P577 ?unformattedReleaseDate. }
-        OPTIONAL {
-          ?videogame wdt:P57 ?director. 
-          ?director rdfs:label ?directorLabel. 
-          FILTER(LANG(?directorLabel) = "en").
-        }
-        OPTIONAL { 
-          ?videogame wdt:P840 ?location. 
-          ?location rdfs:label ?locationLabel. 
-          FILTER(LANG(?locationLabel) = "en").
-        }
-        SERVICE wikibase:label { bd:serviceParam wikibase:LANGuage "[AUTO_LANGUAGE],fr, en". }
-      }
-      GROUP BY ?videogame ?videogameLabel
-      ORDER BY ?releaseDate
 
-    `
-}*/
+
+function gameRequestSpecificWikiData(id) {
+  return `
+    SELECT DISTINCT 
+      ?videogame 
+      ?videogameLabel 
+      ?logoImage
+      ?releaseDate
+      ?directorLabel
+      ?composerLabel
+      ?producerLabel
+      ?platformLabel
+      ?genreLabel
+      ?gameModeLabel
+      ?softwareEngineLabel
+    WHERE {
+      BIND(wd:${id} AS ?videogame)
+
+      # Ensure it's a video game
+      ?videogame wdt:P31 wd:Q7889.  # Instance of video game
+
+      # Optional properties
+      OPTIONAL { ?videogame wdt:P577 ?releaseDate. }         # Release date
+      OPTIONAL { ?videogame wdt:P57 ?director. }             # Director
+      OPTIONAL { ?videogame wdt:P86 ?composer. }             # Composer
+      OPTIONAL { ?videogame wdt:P162 ?producer. }            # Producer
+      OPTIONAL { ?videogame wdt:P154 ?logoImage. }           # Logo image
+      OPTIONAL { ?videogame wdt:P400 ?platform. }            # Platform
+      OPTIONAL { ?videogame wdt:P136 ?genre. }               # Genre
+      OPTIONAL { ?videogame wdt:P404 ?gameMode. }            # Game mode
+      OPTIONAL { ?videogame wdt:P178 ?softwareEngine. }      # Software engine
+
+      # Retrieve human-readable labels
+      SERVICE wikibase:label { 
+        bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". 
+      }
+    }
+  `;
+}
+
+
+
+
+
+
+
 
 
 function pokemonSearchRequest(search, n = 1) {
