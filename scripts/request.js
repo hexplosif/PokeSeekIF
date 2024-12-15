@@ -73,7 +73,6 @@ function pokemonRequestWikiData(id) {
     `;
 }
 
-
 function pokemonEvolutionsRequest(id) {
   // Formater l'ID pour qu'il ait toujours 3 chiffres avec des zéros devant
   const formattedId = id.toString().padStart(3, '0');
@@ -229,7 +228,6 @@ ORDER BY ?earliestReleaseDate
 `;
 }
 
-
 function moviesRequestWikiData() {
   return `SELECT DISTINCT 
   ?movie 
@@ -279,54 +277,46 @@ function gamesRequestWikiData() {
   `;
 }
 
-
-
 function gameRequestSpecificWikiData(id) {
   return `
     SELECT DISTINCT 
-      ?videogame 
-      ?videogameLabel 
-      ?logoImage
-      ?releaseDate
-      ?directorLabel
-      ?composerLabel
-      ?producerLabel
-      ?platformLabel
-      ?genreLabel
-      ?gameModeLabel
-      ?softwareEngineLabel
-    WHERE {
-      BIND(wd:${id} AS ?videogame)
+  ?videogame 
+  ?videogameLabel 
+  ?logoImage
+  (SAMPLE(?releaseDate) AS ?releaseDates)
+  (SAMPLE(?directorLabel) AS ?directors)
+  (SAMPLE(?composerLabel) AS ?composers)
+  (SAMPLE(?producerLabel) AS ?producers)
+  (GROUP_CONCAT(DISTINCT ?platformLabel; separator=", ") AS ?platforms)
+  (GROUP_CONCAT(DISTINCT ?genreLabel; separator=", ") AS ?genres)
+  (GROUP_CONCAT(DISTINCT ?gameModeLabel; separator=", ") AS ?gameModes)
+  (SAMPLE(?softwareEngineLabel) AS ?softwareEngines)
+WHERE {
+  BIND(wd:${id} AS ?videogame)
 
-      # Ensure it's a video game
-      ?videogame wdt:P31 wd:Q7889.  # Instance of video game
+  # Ensure it's a video game
+  ?videogame wdt:P31 wd:Q7889.  # Instance of video game
 
-      # Optional properties
-      OPTIONAL { ?videogame wdt:P577 ?releaseDate. }         # Release date
-      OPTIONAL { ?videogame wdt:P57 ?director. }             # Director
-      OPTIONAL { ?videogame wdt:P86 ?composer. }             # Composer
-      OPTIONAL { ?videogame wdt:P162 ?producer. }            # Producer
-      OPTIONAL { ?videogame wdt:P154 ?logoImage. }           # Logo image
-      OPTIONAL { ?videogame wdt:P400 ?platform. }            # Platform
-      OPTIONAL { ?videogame wdt:P136 ?genre. }               # Genre
-      OPTIONAL { ?videogame wdt:P404 ?gameMode. }            # Game mode
-      OPTIONAL { ?videogame wdt:P178 ?softwareEngine. }      # Software engine
+  # Optional properties
+  OPTIONAL { ?videogame wdt:P577 ?releaseDate. }         # Release date
+  OPTIONAL { ?videogame wdt:P57 ?director. ?director rdfs:label ?directorLabel FILTER(LANG(?directorLabel) = "fr") } # Director
+  OPTIONAL { ?videogame wdt:P86 ?composer. ?composer rdfs:label ?composerLabel FILTER(LANG(?composerLabel) = "fr") } # Composer
+  OPTIONAL { ?videogame wdt:P162 ?producer. ?producer rdfs:label ?producerLabel FILTER(LANG(?producerLabel) = "fr") } # Producer
+  OPTIONAL { ?videogame wdt:P154 ?logoImage. }           # Logo image
+  OPTIONAL { ?videogame wdt:P400 ?platform. ?platform rdfs:label ?platformLabel FILTER(LANG(?platformLabel) = "fr") } # Platform
+  OPTIONAL { ?videogame wdt:P136 ?genre. ?genre rdfs:label ?genreLabel FILTER(LANG(?genreLabel) = "fr") } # Genre
+  OPTIONAL { ?videogame wdt:P404 ?gameMode. ?gameMode rdfs:label ?gameModeLabel FILTER(LANG(?gameModeLabel) = "fr") } # Game mode
+  OPTIONAL { ?videogame wdt:P178 ?softwareEngine. ?softwareEngine rdfs:label ?softwareEngineLabel FILTER(LANG(?softwareEngineLabel) = "fr") } # Software engine
 
-      # Retrieve human-readable labels
-      SERVICE wikibase:label { 
-        bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". 
-      }
-    }
+  # Retrieve human-readable labels
+  SERVICE wikibase:label { 
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". 
+  }
+}
+GROUP BY ?videogame ?videogameLabel ?logoImage
+
   `;
 }
-
-
-
-
-
-
-
-
 
 function pokemonSearchRequest(search, n = 1) {
   return `
