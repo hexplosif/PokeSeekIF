@@ -54,16 +54,3 @@ async function main() {
 }
 
 main();
-
-
-/*
-    <div class="card-body bg-danger text-center p-2">
-        <div>Release Date: ${game.releaseDate !== "Unknown" ? new Date(game.releaseDate).toLocaleDateString() : "Unknown"}</div>
-        <div>Director: ${game.director}</div>
-        <div>Location: ${game.location}</div>
-    </div>
-
-     <div class="card-middle">
-        ${game.logoImage ? `<img src="${game.logoImage}" alt="${game.name}" class="game-image">` : '<img src="img/loading.gif" alt="Loading..." class="game-image">'}
-    </div>
-*/

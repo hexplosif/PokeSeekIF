@@ -169,10 +169,11 @@ function moviesRequestSpecificWikiData(id) {
   ?movie 
   ?movieLabel 
   (MIN(?releaseDate) AS ?earliestReleaseDate) 
+  ?sequel 
   ?sequelLabel 
-  ?sequel
   (GROUP_CONCAT(DISTINCT ?directorLabel; separator=",") AS ?directors)
   (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=",") AS ?screenwriters)
+  ?producerLabel
   ?productionCompanyLabel 
   ?duration 
   ?tmdbID
@@ -180,10 +181,10 @@ function moviesRequestSpecificWikiData(id) {
   ?metacriticScore 
   ?eirinRatingLabel
 WHERE {
-  # Find items that are instances of anime films or general films
+  # Restrict the type of movies to anime films or general films
   ?movie wdt:P31 ?movieType;
          wdt:P527* ?series. # Part of a series
-  
+
   # Ensure the type is either anime film or general film
   VALUES ?movieType { wd:Q20650540 wd:Q11424 } # Anime film or general film
 
@@ -193,35 +194,44 @@ WHERE {
   # Optional properties for additional information
   OPTIONAL { ?movie wdt:P577 ?releaseDate. } # Release date
   OPTIONAL { ?movie wdt:P345 ?imdbID. }      # IMDb ID
-  OPTIONAL { ?movie wdt:P57  ?director. }    # Directors
-  OPTIONAL { ?movie wdt:P58   ?screenwriter. } # Screenwriter
-  OPTIONAL { ?movie wdt:P162  ?producer. }   # Producer
-  OPTIONAL { ?movie wdt:P272  ?productionCompany. } # Production company
+  OPTIONAL { ?movie wdt:P57 ?director. }     # Director
+  OPTIONAL { ?movie wdt:P58 ?screenwriter. } # Screenwriter
+  OPTIONAL { ?movie wdt:P162 ?producer. } # Producer
+  OPTIONAL { ?movie wdt:P272 ?productionCompany. } # Production company
   OPTIONAL { ?movie wdt:P2047 ?duration. }   # Duration
   OPTIONAL { ?movie wdt:P3834 ?eirinRating. } # EIRIN film rating
   OPTIONAL { ?movie wdt:P4947 ?tmdbID. }     # TMDb ID
-  OPTIONAL { ?movie wdt:P156 ?sequel. }  # Sequel
+  OPTIONAL { ?movie wdt:P156 ?sequel. }      # Sequel
   OPTIONAL { 
     ?movie p:P444 ?metacriticStatement. 
     ?metacriticStatement ps:P444 ?metacriticScore. 
     ?metacriticStatement pq:P447 wd:Q150248. 
   }
 
-  FILTER(?movie = ${id})
+   FILTER(?movie = wd:${id})
 
+  # Fetch labels for entities
   SERVICE wikibase:label { 
-    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,fr". 
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". 
+    ?movie rdfs:label ?movieLabel.
+    ?sequel rdfs:label ?sequelLabel.
+    ?director rdfs:label ?directorLabel.
+    ?screenwriter rdfs:label ?screenwriterLabel.
+    ?producer rdfs:label ?producerLabel.
+    ?productionCompany rdfs:label ?productionCompanyLabel.
+    ?eirinRating rdfs:label ?eirinRatingLabel.
   }
 }
 GROUP BY 
   ?movie
   ?movieLabel
-  ?sequelLabel 
+  ?sequel
+  ?sequelLabel
+  ?producerLabel
   ?productionCompanyLabel 
   ?duration
   ?tmdbID
   ?imdbID
-  ?sequel
   ?metacriticScore
   ?eirinRatingLabel
 ORDER BY ?earliestReleaseDate
@@ -233,27 +243,26 @@ function moviesRequestWikiData() {
   ?movie 
   ?movieLabel 
   (MIN(?releaseDate) AS ?earliestReleaseDate) 
-  (GROUP_CONCAT(DISTINCT ?directorLabel; separator=",") AS ?directors)
-  (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=",") AS ?screenwriters)
   ?tmdbID
 WHERE {
-  # Find items that are instances of anime films or general films
+  # Restrict the type of movies to anime films or general films
   ?movie wdt:P31 ?movieType;
          wdt:P527* ?series. # Part of a series
-  
+
   # Ensure the type is either anime film or general film
   VALUES ?movieType { wd:Q20650540 wd:Q11424 } # Anime film or general film
 
   # Ensure the series is related to Pokémon
   ?series wdt:P179 wd:Q97138261. # "Pokémon" series
 
-  # Optional properties for additional information
+  # Fetch properties and their labels
   OPTIONAL { ?movie wdt:P577 ?releaseDate. } # Release date
   OPTIONAL { ?movie wdt:P4947 ?tmdbID. }     # TMDb ID
 
-  
+  # Labels for movie, directors, and screenwriters
   SERVICE wikibase:label { 
-    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,fr". 
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en". 
+    ?movie rdfs:label ?movieLabel.
   }
 }
 GROUP BY 

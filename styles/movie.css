@@ -60,3 +60,7 @@
     -o-border-radius: 0.5rem;
     overflow: hidden;
 }
+
+.right-container .info .movie-image {
+    width: 300px;
+}

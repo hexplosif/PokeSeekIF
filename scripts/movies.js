@@ -21,23 +21,6 @@ async function fetchSPARQLMoviesData() {
   }
 }
 
-// Fetch movie poster URL from TMDb
-async function getMoviePosterURLFromTMDb(tmdbID) {
-  const tmdbUrl = `${TMDb_BASE_URL}${tmdbID}?api_key=${API_KEY}`;
-
-  try {
-    const response = await fetch(tmdbUrl);
-    const data = await response.json();
-
-    return data.poster_path
-      ? `${TMDb_IMAGE_BASE_URL}${data.poster_path}`
-      : "https://via.placeholder.com/200x300"; // Fallback image
-  } catch (error) {
-    console.error("Error fetching movie data from TMDb:", error);
-    return "https://via.placeholder.com/200x300"; // Fallback image
-  }
-}
-
 // Render movies in the movies page
 async function renderMovies(movies) {
   const loader = document.getElementById('loader');
@@ -46,7 +29,7 @@ async function renderMovies(movies) {
 
   for (const movie of movies) {
     // Fetch poster URL asynchronously
-    const posterUrl = await getMoviePosterURLFromTMDb(movie.tmdbID);
+    const posterUrl = await getSpecificMoviePosterURLFromTMDb(movie.tmdbID);
 
 
     // Hello Louis début de mon bazar dans ton code, attention le lutin est d'humeur farceur
