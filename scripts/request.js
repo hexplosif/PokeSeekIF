@@ -109,7 +109,7 @@ function pokemonEvolutionsRequest(id) {
 function pokemonGamesRequest(id) {
   const formattedId = id.toString().padStart(3, '0');
   return `
-  SELECT DISTINCT ?pokemon ?pokemonLabel ?gameLabel ?publicationDate WHERE {
+  SELECT DISTINCT ?pokemon ?pokemonLabel ?gameId ?gameLabel ?publicationDate WHERE {
         # Identify Pokémon directly by National Pokédex Number
         ?pokemon p:P1685 ?s ;  # National Pokédex Number     
                  wdt:P31/wdt:P279* wd:Q3966183 ;  # Class: Pokémon
@@ -120,22 +120,22 @@ function pokemonGamesRequest(id) {
         ?gs ps:P361 ?g .
         ?g wdt:P31 wd:Q99973598 .
         ?g p:P31 ?gs2 .
-        ?gs2 pq:P642 ?gg .
+        ?gs2 pq:P642 ?gameId .
   
-        ?gg p:P577 ?ds .
+        ?gameId p:P577 ?ds .
         ?ds ps:P577 ?publicationDate .
         ?ds pq:P291 wd:Q17 .
   
 
         # Retrieve labels
         ?pokemon rdfs:label ?pokemonLabel .
-        ?gg rdfs:label ?gameLabel
+        ?gameId rdfs:label ?gameLabel
 
         # FILTER for French labels
         FILTER(LANG(?pokemonLabel) = "fr")
         FILTER(LANG(?gameLabel) = "fr")
     }
-    GROUP BY ?pokemon ?pokemonLabel ?gameLabel ?publicationDate
+    GROUP BY ?pokemon ?pokemonLabel ?gameId ?gameLabel ?publicationDate
   `;
 }
 

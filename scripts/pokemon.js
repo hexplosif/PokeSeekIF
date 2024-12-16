@@ -6,6 +6,7 @@ async function fetchPokemon(id) {
     const response1 = await fetch(gamesUrl).then(response => response.json());
     const games = response1.results.bindings.map(game => {
         return {
+            id: game.gameId.value.substring(31),
             name: game.gameLabel.value,
             publicationDate: game.publicationDate.value.split('-')[0]
         };
@@ -272,13 +273,15 @@ function renderPokemon(pokemon) {
     if (pokemon.games.length === 0) {
         document.querySelector('.games-title').style.display = 'none';
     }
+    console.log(pokemon.games);
+
     pokemon.games.forEach(game => {
         const gameElement = document.createElement('a');
         gameElement.className = 'game';
         gameElement.innerHTML = `
             <div class="name">${game.name} (${game.publicationDate})</div>
         `;
-        gameElement.href = `game.html?name=${game.name}`;
+        gameElement.href = "game.html?id=" + game.id;
         games.appendChild(gameElement);
     });
 
