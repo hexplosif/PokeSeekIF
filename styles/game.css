@@ -58,7 +58,6 @@
 /* Right Container */
 .right-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   margin: 1rem;
@@ -69,13 +68,23 @@
   padding: 1rem;
 }
 
+.right-container .info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #3c3c3e;
+  border-radius: 0.5rem;
+}
+
 .right-container .info .poster {
   width: 100%;
   height: auto;
   object-fit: contain;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   overflow: hidden;
-  background-color: #3c3c3e;
   padding: 0.5rem;
 }
 

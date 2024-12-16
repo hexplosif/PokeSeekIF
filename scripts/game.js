@@ -27,7 +27,7 @@ async function renderGame(game) {
 
     // Populate main details
     document.querySelector('.main-info .name').textContent = game.name || 'Unknown';
-    document.querySelector('.releaseDate').textContent = game.releaseDate || 'Unknown';
+    document.querySelector('.releaseDate').textContent = game.releaseDate.split('T')[0].replace(/-/g, '/') || 'Unknown';
     document.querySelector('.director').textContent = game.director || 'Unknown';
     document.querySelector('.composer').textContent = game.composer || 'Unknown';
     document.querySelector('.producer').textContent = game.producer || 'Unknown';

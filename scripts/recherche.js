@@ -95,9 +95,9 @@ function renderResults(results, type) {
         if (type === 'pokemon') {
             title.innerText = 'Pokémon'
         } else if (type === 'game') {
-            title.innerText = 'Game'
+            title.innerText = 'Jeux'
         } else if (type === 'movie') {
-            title.innerText = 'Movie'
+            title.innerText = 'Films'
         }
         category.appendChild(title)
         const ul = document.createElement('ul')
