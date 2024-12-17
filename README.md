@@ -8,4 +8,8 @@
 ![DBPedia](https://img.shields.io/badge/-DBPedia-black?style=flat-circle&logo=dbpedia)
 ![Wikidata](https://img.shields.io/badge/-Wikidata-black?style=flat-circle&logo=wikidata)
 
-Un site web affichant des informations sur les Pokémons à partir de requete SPARQL via DBPedia et Wikidata.
+Un site web affichant des informations sur les Pokémons à partir de requete SPARQL via Wikidata et TriplyDB.
+
+Pour lancer le projet, il faut ouvrir le fichier index.html dans un navigateur.
+
+On peut aussi ouvrir le site web via ce lien : [Zarb'IF](https://hexplosif.github.io/ZarbIF).
