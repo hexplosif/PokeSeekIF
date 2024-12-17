@@ -165,7 +165,8 @@ function pokemonRequestTriplyDB(id) {
 }
 
 function moviesRequestSpecificWikiData(id) {
-  return `SELECT DISTINCT 
+  return `
+  SELECT DISTINCT 
   ?movie 
   ?movieLabel 
   (MIN(?releaseDate) AS ?earliestReleaseDate) 
@@ -180,7 +181,7 @@ function moviesRequestSpecificWikiData(id) {
   ?imdbID 
   ?metacriticScore 
   ?eirinRatingLabel
-WHERE {
+  WHERE {
   # Restrict the type of movies to anime films or general films
   ?movie wdt:P31 ?movieType;
          wdt:P527* ?series. # Part of a series

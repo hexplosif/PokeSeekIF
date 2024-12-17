@@ -8,14 +8,14 @@ async function fetchGame(id) {
     return data.results.bindings.map(game => ({
         id: game.videogame.value,
         name: game.videogameLabel.value,
-        releaseDate: game.releaseDates?.value || 'Unknown',
-        director: game.directors?.value || 'Unknown',
-        composer: game.composers?.value || 'Unknown',
-        producer: game.producers?.value || 'Unknown',
-        platform: game.platforms?.value || 'Unknown',
-        genre: game.genres?.value || 'Unknown',
-        mode: game.gameModes?.value || 'Unknown',
-        engine: game.softwareEngines?.value || 'Unknown',
+        releaseDate: game.releaseDates?.value || 'Unown',
+        director: game.directors?.value || 'Unown',
+        composer: game.composers?.value || 'Unown',
+        producer: game.producers?.value || 'Unown',
+        platform: game.platforms?.value || 'Unown',
+        genre: game.genres?.value || 'Unown',
+        mode: game.gameModes?.value || 'Unown',
+        engine: game.softwareEngines?.value || 'Unown',
         logoImage: game.logoImage?.value || null,
     }));
 
@@ -26,15 +26,15 @@ async function renderGame(game) {
     game = game[0];
 
     // Populate main details
-    document.querySelector('.main-info .name').textContent = game.name || 'Unknown';
-    document.querySelector('.releaseDate').textContent = game.releaseDate.split('T')[0].replace(/-/g, '/') || 'Unknown';
-    document.querySelector('.director').textContent = game.director || 'Unknown';
-    document.querySelector('.composer').textContent = game.composer || 'Unknown';
-    document.querySelector('.producer').textContent = game.producer || 'Unknown';
-    document.querySelector('.platform').textContent = game.platform || 'Unknown';
-    document.querySelector('.genre').textContent = game.genre || 'Unknown';
-    document.querySelector('.mode').textContent = game.mode || 'Unknown';
-    document.querySelector('.engine').textContent = game.engine || 'Unknown';
+    document.querySelector('.main-info .name').textContent = game.name || 'Unown';
+    document.querySelector('.releaseDate').textContent = game.releaseDate.split('T')[0].replace(/-/g, '/') || 'Unown';
+    document.querySelector('.director').textContent = game.director || 'Unown';
+    document.querySelector('.composer').textContent = game.composer || 'Unown';
+    document.querySelector('.producer').textContent = game.producer || 'Unown';
+    document.querySelector('.platform').textContent = game.platform || 'Unown';
+    document.querySelector('.genre').textContent = game.genre || 'Unown';
+    document.querySelector('.mode').textContent = game.mode || 'Unown';
+    document.querySelector('.engine').textContent = game.engine || 'Unown';
 
     // Display game poster
     const poster = document.querySelector('.poster');

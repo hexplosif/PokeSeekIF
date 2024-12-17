@@ -8,18 +8,17 @@ async function fetchMovie(id) {
         id: movie.movie.value,
         name: movie.movieLabel.value,
         releaseDate: movie.earliestReleaseDate?.value || 'N/A', // Fallback if releaseDate is missing
-        director: movie.directors?.value || 'Unknown', // Fallback if director is missing
-        screenwriter: movie.screenwriters?.value || 'Unknown', // Fallback if screenwriter is missing
-        producer: movie.producerLabel?.value || 'Unknown', // Fallback if producer is missing
-        productionCompany: movie.productionCompanyLabel?.value || 'Unknown', // Fallback if production company is missing
-        duration: movie.duration?.value || 'Unknown', // Fallback if duration is missing
+        director: movie.directors?.value || 'Unown', // Fallback if director is missing
+        screenwriter: movie.screenwriters?.value || 'Unown', // Fallback if screenwriter is missing
+        producer: movie.producerLabel?.value || 'Unown', // Fallback if producer is missing
+        productionCompany: movie.productionCompanyLabel?.value || 'Unown', // Fallback if production company is missing
+        duration: movie.duration?.value || 'Unown', // Fallback if duration is missing
         imdbID: movie.imdbID?.value || 'N/A', // Fallback if IMDb ID is missing
         metacriticScore: movie.metacriticScore?.value || 'N/A', // Fallback if Metacritic score is missing
         eirinRating: movie.eirinRatingLabel?.value || 'N/A', // Fallback if EIRIN rating is missing
-        tmdbID: movie.tmdbID?.value || "2", // Default ID if none provided
+        tmdbID: movie.tmdbID?.value || "N/A", // Default ID if none provided
         sequelLabel: movie.sequelLabel?.value || 'N/A', // Fallback if SequelLabel is missing
         sequel: movie.sequel?.value || 'N/A', // Fallback if SequelLabel is missing
-
     }));
 
     return movie;
