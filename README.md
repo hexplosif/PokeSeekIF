@@ -13,3 +13,12 @@ Un site web affichant des informations sur les Pokémons à partir de requete SP
 Pour lancer le projet, il faut ouvrir le fichier index.html dans un navigateur.
 
 On peut aussi ouvrir le site web via ce lien : [Zarb'IF](https://hexplosif.github.io/ZarbIF).
+
+Membre du groupe :
+- SCHLEE Adam
+- KUSNO Louis
+- MANTZARIDES Guillaume
+- FELZINES Joris
+- STEPHAN Justine
+- BONKOUNGOU Mathis
+- TOCA Marta
