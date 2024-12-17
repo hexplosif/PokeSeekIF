@@ -46,7 +46,7 @@ async function renderGame(game) {
         imgElement.className = 'poster';
         poster.appendChild(imgElement);
     } else {
-        poster.textContent = 'Poster not available.';
+        poster.textContent = 'Affiche non disponible.';
     }
 }
 

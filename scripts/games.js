@@ -39,7 +39,7 @@ async function fetchSPARQLGamesData() {
             <div class="card-middle">
                 ${game.logoImage 
                   ? `<img src="${game.logoImage}" alt="${game.name}" class="game-image">` 
-                  : '<div class="no-image">Image not available in wikidata yet ...</div>'}
+                  : '<div class="no-image">Image non disponible sur wikidata ...</div>'}
             </div>
         `;
         card.href = "game.html?id=" + game.id.substring(31);
