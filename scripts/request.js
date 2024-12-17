@@ -172,8 +172,8 @@ function moviesRequestSpecificWikiData(id) {
   (MIN(?releaseDate) AS ?earliestReleaseDate) 
   ?sequel 
   ?sequelLabel 
-  (GROUP_CONCAT(DISTINCT ?directorLabel; separator=",") AS ?directors)
-  (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=",") AS ?screenwriters)
+  (GROUP_CONCAT(DISTINCT ?directorLabel; separator=", ") AS ?directors)
+  (GROUP_CONCAT(DISTINCT ?screenwriterLabel; separator=", ") AS ?screenwriters)
   ?producerLabel
   ?productionCompanyLabel 
   ?duration 
